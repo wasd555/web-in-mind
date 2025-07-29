@@ -2,10 +2,9 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
+
 const jwt = require("jsonwebtoken");
-
 const authRouter = require("./routes/auth");
-
 const videosRouter = require("./routes/videos");
 
 const app = express();
@@ -30,8 +29,8 @@ app.use(rateLimit({
 
 // 4. JSON парсер
 app.use(express.json());
-
 app.use("/auth", authRouter);
+app.use("/videos", videosRouter);
 
 // Проверка здоровья
 app.get("/health", (req, res) => {
@@ -56,8 +55,6 @@ function authenticateToken(req, res, next) {
 app.get("/admin", authenticateToken, (req, res) => {
     res.json({ message: "Добро пожаловать в админку", user: req.user });
 });
-
-app.use("/videos", videosRouter);
 
 app.listen(port, () => {
     console.log(`API Gateway running at http://localhost:${port}`);

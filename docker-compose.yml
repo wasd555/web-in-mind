@@ -7,6 +7,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/api-gateway:/app
+      - ./backend/shared-uploads:/app/uploads
 #      - /app/node_modules
     command: npm run dev
     depends_on:

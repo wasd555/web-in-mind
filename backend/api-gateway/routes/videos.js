@@ -5,8 +5,9 @@ const path = require("path");
 const router = express.Router();
 
 // Путь к shared-uploads
-const uploadsPath = path.join(__dirname, "../../shared-uploads");
-
+// const uploadsPath = path.join(__dirname, "../../shared-uploads");
+const uploadsPath = path.join("/app/uploads");
+console.log("Проверяем uploadsPath:", uploadsPath);
 // Получение списка видео
 router.get("/", (req, res) => {
     if (!fs.existsSync(uploadsPath)) {
@@ -21,7 +22,7 @@ router.get("/", (req, res) => {
         const folderPath = path.join(uploadsPath, videoFolder);
         const files = fs.readdirSync(folderPath);
         const availableResolutions = files
-            .filter((f) => f.endsWith(".m3u8"))
+            .filter((f) => f.endsWith(".m3u8") && !f.startsWith("master"))
             .map((f) => f.replace(".m3u8", ""));
 
         return {
