@@ -4,6 +4,8 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const uploadRouter = require("./routes/upload");
 
+const {authenticateToken} = require("./middleware/auth");
+
 const app = express();
 const port = 8001;
 
@@ -28,7 +30,7 @@ app.get("/health", (req, res) => {
 });
 
 // Маршруты
-app.use("/upload", uploadRouter);
+app.use("/upload", authenticateToken, uploadRouter);
 
 // Запуск сервера
 app.listen(port, () => {

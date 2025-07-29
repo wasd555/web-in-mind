@@ -19,6 +19,8 @@ Thumbs.db
 .vscode/
 *.iml
 
+backend/shared-uploads/
+
 # Build & Output
 dist/
 build/

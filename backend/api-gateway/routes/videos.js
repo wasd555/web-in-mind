@@ -1,8 +1,49 @@
-const express = require('express');
-const {getAllVideos} = require('../controllers/videoController');
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
 
 const router = express.Router();
 
-router.get('/', getAllVideos);
+// Путь к shared-uploads
+const uploadsPath = path.join(__dirname, "../../shared-uploads");
+
+// Получение списка видео
+router.get("/", (req, res) => {
+    if (!fs.existsSync(uploadsPath)) {
+        return res.json([]);
+    }
+
+    const videos = fs.readdirSync(uploadsPath).filter((file) =>
+        fs.statSync(path.join(uploadsPath, file)).isDirectory()
+    );
+
+    const result = videos.map((videoFolder) => {
+        const folderPath = path.join(uploadsPath, videoFolder);
+        const files = fs.readdirSync(folderPath);
+        const availableResolutions = files
+            .filter((f) => f.endsWith(".m3u8"))
+            .map((f) => f.replace(".m3u8", ""));
+
+        return {
+            name: videoFolder,
+            availableResolutions,
+            hls: `/videos/${videoFolder}/master.m3u8`
+        };
+    });
+
+    res.json(result);
+});
+
+// Раздача HLS файлов
+router.get("/:video/:file", (req, res) => {
+    const { video, file } = req.params;
+    const filePath = path.join(uploadsPath, video, file);
+
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).send("Файл не найден");
+    }
+
+    res.sendFile(filePath);
+});
 
 module.exports = router;

@@ -18,6 +18,7 @@ services:
       - "8001:8001"
     volumes:
       - ./backend/video-uploader:/app
+      - ./backend/shared-uploads:/app/uploads
 #      - /app/node_modules
     command: npm run dev
     depends_on:
@@ -33,7 +34,12 @@ services:
     build: ./backend/video-processor
     volumes:
       - ./backend/video-processor:/app
+      - uploads_data:/app/uploads
+      - ./backend/shared-uploads:/app/uploads
 #      - /app/node_modules
     command: npm run dev
     depends_on:
       - rabbitmq
+
+volumes:
+  uploads_data:
