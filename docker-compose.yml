@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  api-gateway:
+    build: ./backend/api-gateway
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/api-gateway:/app
+#      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - rabbitmq
+
+  video-uploader:
+    build: ./backend/video-uploader
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./backend/video-uploader:/app
+#      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"   # порт для работы с RabbitMQ
+      - "15672:15672" # веб-интерфейс управления
+
+  video-processor:
+    build: ./backend/video-processor
+    volumes:
+      - ./backend/video-processor:/app
+#      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - rabbitmq
