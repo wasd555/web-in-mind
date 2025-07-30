@@ -4,7 +4,7 @@ const path = require("path");
 
 const router = express.Router();
 
-// Путь к shared-uploads
+
 // const uploadsPath = path.join(__dirname, "../../shared-uploads");
 const uploadsPath = path.join("/app/uploads");
 console.log("Проверяем uploadsPath:", uploadsPath);
