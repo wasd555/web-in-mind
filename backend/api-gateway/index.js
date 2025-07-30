@@ -12,7 +12,7 @@ const port = 8000;
 
 app.use(helmet());
 
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = ["http://localhost:3002"];
 app.use(cors({
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
