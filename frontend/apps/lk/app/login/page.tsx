@@ -1,11 +1,42 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { loginUser } from "../../src/lib/apiAuth";
+
 export default function LoginPage() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const router = useRouter();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            router.replace("/dashboard");
+        }
+    }, [router]);
+
+    async function handleLogin(e: React.FormEvent) {
+        e.preventDefault();
+        setError("");
+        try {
+            await loginUser(email, password);
+            window.dispatchEvent(new Event("storage"));
+            router.push("/dashboard");
+        } catch (err: any) {
+            setError(err.message);
+        }
+    }
+
     return (
         <div className="flex items-center justify-center min-h-[calc(100vh-96px)] px-4">
             <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md transform transition-all hover:scale-[1.01] duration-200">
                 <h2 className="text-3xl font-extrabold text-center mb-6 text-green-700">
                     Вход
                 </h2>
-                <form className="flex flex-col">
+                {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
+                <form className="flex flex-col" onSubmit={handleLogin}>
                     <div className="mb-5">
                         <label
                             htmlFor="email"
@@ -19,6 +50,8 @@ export default function LoginPage() {
                             placeholder="Введите ваш email"
                             className="block w-full rounded-lg border-gray-300 p-3 shadow-sm focus:border-green-400 focus:ring-green-400 transition-colors"
                             required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
                     <div className="mb-6">
@@ -34,6 +67,8 @@ export default function LoginPage() {
                             placeholder="Введите пароль"
                             className="block w-full rounded-lg border-gray-300 p-3 shadow-sm focus:border-green-400 focus:ring-green-400 transition-colors"
                             required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
                     <button

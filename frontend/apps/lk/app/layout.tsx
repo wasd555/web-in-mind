@@ -1,12 +1,40 @@
+"use client";
 import type { Metadata } from "next";
 import "../app/globals.css";
 
-export const metadata: Metadata = {
-    title: "GARmonia — Личный кабинет",
-    description: "Видео и вебинары GARmonia.",
-};
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { logoutUser } from "../src/lib/apiAuth";
+import Link from "next/link";
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+    const router = useRouter();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        setIsLoggedIn(!!token);
+        const handleStorage = () => {
+            const newToken = localStorage.getItem("token");
+            setIsLoggedIn(!!newToken);
+        };
+        window.addEventListener("storage", handleStorage);
+        return () => {
+            window.removeEventListener("storage", handleStorage);
+        };
+    }, []);
+
+    if (typeof window !== "undefined" && !isLoggedIn && window.location.pathname !== "/login" && window.location.pathname !== "/register") {
+        // Можно сделать редирект или оставить как есть
+    }
+
+    function handleLogout() {
+        logoutUser();
+        router.push("/login");
+        setIsLoggedIn(false);
+    }
+
     return (
         <html lang="ru" className="h-full">
         <body className="min-h-screen flex flex-col bg-gradient-to-b from-green-100 via-blue-100 to-blue-200 text-gray-900">
@@ -15,18 +43,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="max-w-5xl mx-auto flex justify-between items-center p-4">
                 <h1 className="text-2xl font-extrabold tracking-wide">GARmonia LK</h1>
                 <nav className="flex gap-6 text-white font-medium">
-                    <a href="/dashboard" className="hover:underline hover:scale-105 transition-transform">
-                        Дашборд
-                    </a>
-                    <a href="/videos" className="hover:underline hover:scale-105 transition-transform">
-                        Видео
-                    </a>
-                    <a href="/profile" className="hover:underline hover:scale-105 transition-transform">
-                        Профиль
-                    </a>
-                    <a href="/login" className="hover:underline hover:scale-105 transition-transform">
-                        Войти
-                    </a>
+                    {isLoggedIn ? (
+                        <>
+                            <Link href="/dashboard" className="hover:underline hover:scale-105 transition-transform">Дашборд</Link>
+                            <Link href="/videos" className="hover:underline hover:scale-105 transition-transform">Видео</Link>
+                            <Link href="/profile" className="hover:underline hover:scale-105 transition-transform">Профиль</Link>
+                            <button onClick={handleLogout} className="hover:underline hover:scale-105 transition-transform">Выйти</button>
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/login" className="hover:underline hover:scale-105 transition-transform">Войти</Link>
+                            <Link href="/register" className="hover:underline hover:scale-105 transition-transform">Регистрация</Link>
+                        </>
+                    )}
                 </nav>
             </div>
         </header>

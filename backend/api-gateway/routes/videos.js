@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const authenticateToken = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const router = express.Router();
 const uploadsPath = path.join("/app/uploads");
 console.log("Проверяем uploadsPath:", uploadsPath);
 // Получение списка видео
-router.get("/", (req, res) => {
+router.get("/", authenticateToken, (req, res) => {
     if (!fs.existsSync(uploadsPath)) {
         return res.json([]);
     }
@@ -36,7 +37,7 @@ router.get("/", (req, res) => {
 });
 
 // Раздача HLS файлов
-router.get("/:video/:file", (req, res) => {
+router.get("/:video/:file", authenticateToken, (req, res) => {
     const { video, file } = req.params;
     const filePath = path.join(uploadsPath, video, file);
 

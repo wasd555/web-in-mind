@@ -2,21 +2,21 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
-
-const jwt = require("jsonwebtoken");
-const authRouter = require("./routes/auth");
-const videosRouter = require("./routes/videos");
+const authenticateToken = require("./middleware/auth");
+const authRouter = require("./routes/auth.js");
+const videosRouter = require("./routes/videos.js");
 
 const app = express();
 const port = 8000;
 
 app.use(helmet());
 
-const allowedOrigins = ["http://localhost:3002"];
+const allowedOrigins = ["http://localhost:3002", "http://localhost:3000", "http://localhost:3001"];
 app.use(cors({
     origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(rateLimit({
@@ -26,26 +26,12 @@ app.use(rateLimit({
 
 app.use(express.json());
 app.use("/auth", authRouter);
-app.use("/videos", videosRouter);
+app.use("/videos", authenticateToken, videosRouter);
 
 // хелс чек
 app.get("/health", (req, res) => {
     res.json({ status: "ok", service: "api-gateway" });
 });
-
-// JWT Middleware
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-
-    if (!token) return res.status(401).json({ message: "Нет токена" });
-
-    jwt.verify(token, "SUPER_SECRET_KEY", (err, user) => {
-        if (err) return res.status(403).json({ message: "Токен недействителен" });
-        req.user = user;
-        next();
-    });
-}
 
 app.get("/admin", authenticateToken, (req, res) => {
     res.json({ message: "Добро пожаловать в админку", user: req.user });
