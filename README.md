@@ -84,3 +84,122 @@
 - CORS настроен на доверенные домены.
 - Закрытые API маршруты защищены JWT middleware.
 - Минимизация хранения чувствительных данных на клиенте.
+- 
+## Диаграммы
+
+### High‑level архитектура
+<!-- flowchart LR
+  subgraph Client["Clients"]
+    U1[Browser<br/>(Landing)]
+    U2[Browser<br/>(LK)]
+    U3[Admin]
+  end
+
+  subgraph Frontend["Next.js Frontends (Turborepo)"]
+    L[landing]
+    LK[lk]
+    A[admin]
+  end
+
+  subgraph Directus["Directus (Docker)"]
+    DAPI[REST/GraphQL API]
+    DAuth[Auth: /auth/login,/logout,/users/me]
+    DB[(DB: SQLite→Postgres)]
+    DFiles[(Directus Files)]
+  end
+
+  subgraph Media["Media Pipeline (Docker/K8s)"]
+    GW[API Gateway<br/>Node/Express]
+    UPL[Video Uploader<br/>Multer + RMQ pub]
+    PROC[Video Processor<br/>FFmpeg Worker]
+    RMQ[(RabbitMQ)]
+  end
+
+  subgraph Storage["Storage"]
+    LOCAL[/shared-uploads/ (dev)/]
+    S3[(S3 / Yandex Object Storage)]
+    CDN[(CDN)]
+  end
+
+  U1 --> L
+U2 --> LK
+U3 --> A
+
+L -->|auth, content| DAPI
+LK -->|auth (cookies)| DAuth
+A -->|admin API| DAPI
+
+LK -->|list/play HLS| GW
+L -->|public assets| DFiles
+
+GW -->|static HLS| LOCAL
+GW -.prod .-> CDN
+
+UPL --> RMQ
+RMQ --> PROC
+PROC --> LOCAL
+PROC -.prod .-> S3
+CDN -->|edge| U2
+
+DAPI --- DB
+DAPI --- DFiles -->
+
+### Поток загрузки/выдачи видео
+<!-- sequenceDiagram
+  autonumber
+  actor Admin as Admin (Browser)
+  participant LK as LK (Next.js)
+  participant UPL as Video Uploader (Express)
+  participant RMQ as RabbitMQ
+  participant PROC as Video Processor (FFmpeg)
+  participant FS as shared-uploads/ (dev)
+  participant S3 as S3 Bucket (prod)
+  participant GW as API Gateway (HLS)
+  actor User as User (Browser)
+
+  Admin->>LK: POST /upload (form/file)
+  LK->>UPL: multipart/form-data
+  UPL->>UPL: Save temp file, meta
+  UPL->>RMQ: publish {filePath, targetDir}
+  Note over RMQ: durable queue: video_tasks
+  PROC->>RMQ: consume message
+  PROC->>PROC: FFmpeg → 1080p/720p/480p + HLS
+  alt dev
+    PROC->>FS: write master.m3u8 + segments
+  else prod
+    PROC->>S3: upload HLS objects
+  end
+  User->>GW: GET /videos → list
+  User->>GW: GET /videos/:slug/master.m3u8
+  alt dev
+    GW->>FS: serve HLS files
+  else prod
+    GW->>S3: (origin) or CDN
+    CDN-->>User: segments
+end -->
+
+### Поток аутентификации
+<!-- sequenceDiagram
+  autonumber
+  actor User as User (Browser)
+  participant LK as LK (Next.js)
+  participant D as Directus
+
+  User->>LK: open /login
+  LK->>D: POST /auth/login (email,password)<br/>credentials: include
+  D-->>LK: Set-Cookie (HttpOnly access/refresh)
+LK-->>User: redirect /dashboard
+
+User->>LK: open /dashboard
+LK->>D: GET /users/me (credentials: include)
+D-->>LK: 200 user or 401
+alt 200
+LK-->>User: SSR render protected page
+else 401
+LK-->>User: redirect /login
+end
+
+User->>LK: click Logout
+LK->>D: POST /auth/logout (credentials: include)
+D-->>LK: 204
+LK-->>User: redirect /login -->
