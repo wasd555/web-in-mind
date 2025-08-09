@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser } from "../../src/lib/apiAuth";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -10,19 +9,29 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const router = useRouter();
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            router.replace("/dashboard");
-        }
-    }, [router]);
+    // useEffect for future side effects, if needed
 
     async function handleLogin(e: React.FormEvent) {
         e.preventDefault();
         setError("");
         try {
-            await loginUser(email, password);
-            window.dispatchEvent(new Event("storage"));
+            const res = await fetch("http://localhost:8055/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    email,
+                    password,
+                }),
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData?.errors?.[0]?.message || "Ошибка входа");
+            }
+
             router.push("/dashboard");
         } catch (err: any) {
             setError(err.message);

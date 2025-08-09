@@ -15,6 +15,9 @@ export async function loginUser(email: string, password: string): Promise<string
     return data.token;
 }
 
-export function logoutUser() {
-    localStorage.removeItem("token");
+export async function logoutUser() {
+    await fetch("http://localhost:8055/auth/logout", {
+        method: "POST",
+        credentials: "include", // важно: удалит cookie
+    });
 }

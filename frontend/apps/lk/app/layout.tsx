@@ -13,16 +13,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        setIsLoggedIn(!!token);
-        const handleStorage = () => {
-            const newToken = localStorage.getItem("token");
-            setIsLoggedIn(!!newToken);
+        const checkLoginStatus = async () => {
+            try {
+                const res = await fetch("http://localhost:8055/users/me", {
+                    credentials: "include",
+                });
+                setIsLoggedIn(res.ok);
+            } catch (error) {
+                setIsLoggedIn(false);
+            }
         };
-        window.addEventListener("storage", handleStorage);
-        return () => {
-            window.removeEventListener("storage", handleStorage);
-        };
+
+        checkLoginStatus();
     }, []);
 
     if (typeof window !== "undefined" && !isLoggedIn && window.location.pathname !== "/login" && window.location.pathname !== "/register") {
@@ -37,11 +39,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
     return (
         <html lang="ru" className="h-full">
-        <body className="min-h-screen flex flex-col bg-gradient-to-b from-green-100 via-blue-100 to-blue-200 text-gray-900">
+        <body className="bg-[url('http://localhost:8055/assets/e58e10de-dd15-4e4b-a465-ea6e8d9a1073.png')] bg-cover bg-center min-h-screen flex flex-col bg-gradient-to-b from-green-100 via-blue-100 to-blue-200 text-gray-900">
         {/* Хедер */}
         <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-green-400 to-blue-400 text-white shadow-lg z-50">
             <div className="max-w-5xl mx-auto flex justify-between items-center p-4">
-                <h1 className="text-2xl font-extrabold tracking-wide">GARmonia LK</h1>
+                <div className="flex items-center">
+                    <img
+                        src={'http://localhost:8055/assets/3722dc90-08cb-4bbb-a082-08a45304d23e.svg'}
+                        alt="Логотип"
+                        className="h-10 w-auto object-contain"
+                    />
+                    <span className="ml-2 text-xl font-bold">
+                      GAR<span className="bg-gradient-to-r from-[#fbb040] to-[#f9ed32] bg-clip-text text-transparent">MONIA</span>
+                    </span>
+                </div>
                 <nav className="flex gap-6 text-white font-medium">
                     {isLoggedIn ? (
                         <>

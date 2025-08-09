@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -22,15 +24,22 @@ export default function RegisterPage() {
         }
 
         try {
-            const res = await fetch("http://localhost:8000/auth/register", {
+            const res = await fetch("http://localhost:8055/users", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    first_name: firstName,
+                    last_name: lastName
+                })
             });
 
             if (!res.ok) {
                 const data = await res.json();
-                throw new Error(data.message || "Ошибка регистрации");
+                throw new Error(data.errors?.[0]?.message || "Ошибка регистрации");
             }
 
             setSuccess("Регистрация успешна! Переход на страницу входа...");
@@ -49,6 +58,34 @@ export default function RegisterPage() {
                 {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
                 {success && <p className="text-green-500 text-sm mb-4 text-center">{success}</p>}
                 <form className="flex flex-col" onSubmit={handleRegister}>
+                    <div className="mb-5">
+                        <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                            Имя
+                        </label>
+                        <input
+                            id="firstName"
+                            type="text"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            placeholder="Введите ваше имя"
+                            className="block w-full rounded-lg border-gray-300 p-3 shadow-sm focus:border-green-400 focus:ring-green-400 transition-colors"
+                            required
+                        />
+                    </div>
+                    <div className="mb-5">
+                        <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                            Фамилия
+                        </label>
+                        <input
+                            id="lastName"
+                            type="text"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            placeholder="Введите вашу фамилию"
+                            className="block w-full rounded-lg border-gray-300 p-3 shadow-sm focus:border-green-400 focus:ring-green-400 transition-colors"
+                            required
+                        />
+                    </div>
                     <div className="mb-5">
                         <label
                             htmlFor="email"

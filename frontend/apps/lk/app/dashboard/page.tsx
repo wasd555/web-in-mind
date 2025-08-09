@@ -1,6 +1,12 @@
-import ProtectedRoute from "../../src/components/ProtectedRoute";
+import {getUser} from "../../src/lib/auth";
+import {redirect} from "next/navigation";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+    const user = await getUser();
+
+    if (!user) {
+        redirect("/login");
+    }
     const sections = [
         {
             id: 1,
