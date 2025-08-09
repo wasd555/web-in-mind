@@ -85,121 +85,125 @@
 - Закрытые API маршруты защищены JWT middleware.
 - Минимизация хранения чувствительных данных на клиенте.
 - 
+
 ## Диаграммы
 
 ### High‑level архитектура
-<!-- flowchart LR
-  subgraph Client["Clients"]
-    U1[Browser<br/>(Landing)]
-    U2[Browser<br/>(LK)]
-    U3[Admin]
+```mermaid
+flowchart LR
+  subgraph Clients
+    U1[Landing browser]
+    U2[LK browser]
+    U3[Admin browser]
   end
 
-  subgraph Frontend["Next.js Frontends (Turborepo)"]
+  subgraph Frontend[Next.js apps]
     L[landing]
     LK[lk]
     A[admin]
   end
 
-  subgraph Directus["Directus (Docker)"]
-    DAPI[REST/GraphQL API]
-    DAuth[Auth: /auth/login,/logout,/users/me]
-    DB[(DB: SQLite→Postgres)]
-    DFiles[(Directus Files)]
+  subgraph Directus
+    DAPI[API]
+    DAuth[Auth endpoints]
+    DB[(Database)]
+    DFiles[(Files)]
   end
 
-  subgraph Media["Media Pipeline (Docker/K8s)"]
-    GW[API Gateway<br/>Node/Express]
-    UPL[Video Uploader<br/>Multer + RMQ pub]
-    PROC[Video Processor<br/>FFmpeg Worker]
+  subgraph Media[Media pipeline]
+    GW[API Gateway]
+    UPL[Video Uploader]
+    PROC[Video Processor]
     RMQ[(RabbitMQ)]
   end
 
-  subgraph Storage["Storage"]
-    LOCAL[/shared-uploads/ (dev)/]
-    S3[(S3 / Yandex Object Storage)]
+  subgraph Storage
+    LOCAL[shared-uploads]
+    S3[(S3)]
     CDN[(CDN)]
   end
 
   U1 --> L
-U2 --> LK
-U3 --> A
+  U2 --> LK
+  U3 --> A
 
-L -->|auth, content| DAPI
-LK -->|auth (cookies)| DAuth
-A -->|admin API| DAPI
+  L --> DAPI
+  LK --> DAuth
+  A --> DAPI
 
-LK -->|list/play HLS| GW
-L -->|public assets| DFiles
+  LK --> GW
+  L --> DFiles
 
-GW -->|static HLS| LOCAL
-GW -.prod .-> CDN
+  GW --> LOCAL
+  GW -.-> CDN
 
-UPL --> RMQ
-RMQ --> PROC
-PROC --> LOCAL
-PROC -.prod .-> S3
-CDN -->|edge| U2
+  UPL --> RMQ
+  RMQ --> PROC
+  PROC --> LOCAL
+  PROC -.-> S3
+  CDN --> U2
 
-DAPI --- DB
-DAPI --- DFiles -->
+  DAPI --- DB
+  DAPI --- DFiles
+```
 
 ### Поток загрузки/выдачи видео
-<!-- sequenceDiagram
-  autonumber
-  actor Admin as Admin (Browser)
+```mermaid
+sequenceDiagram
+  participant Admin
   participant LK as LK (Next.js)
-  participant UPL as Video Uploader (Express)
+  participant UPL as Uploader
   participant RMQ as RabbitMQ
-  participant PROC as Video Processor (FFmpeg)
-  participant FS as shared-uploads/ (dev)
-  participant S3 as S3 Bucket (prod)
-  participant GW as API Gateway (HLS)
-  actor User as User (Browser)
+  participant PROC as Processor
+  participant FS as shared-uploads
+  participant S3 as S3
+  participant GW as Gateway
+  participant User
 
-  Admin->>LK: POST /upload (form/file)
-  LK->>UPL: multipart/form-data
-  UPL->>UPL: Save temp file, meta
-  UPL->>RMQ: publish {filePath, targetDir}
-  Note over RMQ: durable queue: video_tasks
-  PROC->>RMQ: consume message
-  PROC->>PROC: FFmpeg → 1080p/720p/480p + HLS
+  Admin->>LK: Upload form
+  LK->>UPL: POST file
+  UPL->>RMQ: publish task
+  PROC->>RMQ: consume task
+  PROC->>PROC: FFmpeg HLS
   alt dev
-    PROC->>FS: write master.m3u8 + segments
+    PROC->>FS: write HLS
   else prod
-    PROC->>S3: upload HLS objects
+    PROC->>S3: upload HLS
   end
-  User->>GW: GET /videos → list
-  User->>GW: GET /videos/:slug/master.m3u8
-  alt dev
-    GW->>FS: serve HLS files
-  else prod
-    GW->>S3: (origin) or CDN
-    CDN-->>User: segments
-end -->
+  User->>GW: GET /videos
+  GW->>FS: serve (dev)
+  GW->>S3: origin (prod)
+```
 
 ### Поток аутентификации
-<!-- sequenceDiagram
-  autonumber
-  actor User as User (Browser)
+```mermaid
+sequenceDiagram
+  participant User
   participant LK as LK (Next.js)
   participant D as Directus
 
   User->>LK: open /login
-  LK->>D: POST /auth/login (email,password)<br/>credentials: include
-  D-->>LK: Set-Cookie (HttpOnly access/refresh)
-LK-->>User: redirect /dashboard
+  LK->>D: POST /auth/login (credentials: include)
+  D-->>LK: Set-Cookie (HttpOnly)
+  LK-->>User: redirect /dashboard
 
-User->>LK: open /dashboard
-LK->>D: GET /users/me (credentials: include)
-D-->>LK: 200 user or 401
-alt 200
-LK-->>User: SSR render protected page
-else 401
-LK-->>User: redirect /login
-end
+  User->>LK: open /dashboard
+  LK->>D: GET /users/me
+  D-->>LK: 200 or 401
+  alt 200
+    LK-->>User: render page
+  else 401
+    LK-->>User: redirect /login
+  end
 
-User->>LK: click Logout
-LK->>D: POST /auth/logout (credentials: include)
-D-->>LK: 204
-LK-->>User: redirect /login -->
+  User->>LK: click logout
+  LK->>D: POST /auth/logout
+  D-->>LK: 204
+  LK-->>User: redirect /login
+```
+
+## 6. Безопасность
+- **HttpOnly cookies** для токенов.
+- CORS настроен на доверенные домены.
+- Закрытые API маршруты защищены JWT middleware.
+- Минимизация хранения чувствительных данных на клиенте.
