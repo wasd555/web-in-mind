@@ -7,11 +7,20 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/api-gateway:/app
+      - /app/node_modules
       - ./backend/shared-uploads:/app/uploads
-#      - /app/node_modules
+    environment:
+      - PORT=8000
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     command: npm run dev
     depends_on:
       - rabbitmq
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/ready || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
 
   video-uploader:
     build: ./backend/video-uploader

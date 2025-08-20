@@ -5,9 +5,10 @@ const rateLimit = require("express-rate-limit");
 const authenticateToken = require("./middleware/auth");
 const authRouter = require("./routes/auth.js");
 const videosRouter = require("./routes/videos.js");
+const probeRouter = require("./routes/readiness");
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 
 app.use(helmet());
 
@@ -27,16 +28,12 @@ app.use(rateLimit({
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/videos", authenticateToken, videosRouter);
-
-// хелс чек
-app.get("/health", (req, res) => {
-    res.json({ status: "ok", service: "api-gateway" });
-});
+app.use("/", probeRouter);
 
 app.get("/admin", authenticateToken, (req, res) => {
     res.json({ message: "Добро пожаловать в админку", user: req.user });
 });
 
-app.listen(port, () => {
-    console.log(`API Gateway running at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`API Gateway running at http://0.0.0.0:${port}`);
 });

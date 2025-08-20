@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
     return (
         <html lang="ru" className="h-full">
-        <body className="bg-[url('http://localhost:8055/assets/e58e10de-dd15-4e4b-a465-ea6e8d9a1073.png')] bg-cover bg-center min-h-screen flex flex-col bg-gradient-to-b from-green-100 via-blue-100 to-blue-200 text-gray-900">
+        <body className="bg-[url('http://localhost:8055/assets/e58e10de-dd15-4e4b-a465-ea6e8d9a1073.png')] bg-cover bg-center min-h-[100svh] md:min-h-screen flex flex-col bg-gradient-to-b from-green-100 via-blue-100 to-blue-200 text-gray-900">
         {/* Хедер */}
         <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-green-400 to-blue-400 text-white shadow-lg z-50">
             <div className="max-w-5xl mx-auto flex justify-between items-center p-4">
