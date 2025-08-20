@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 type Props = {
     links: { href: string; label: string }[];
@@ -75,6 +76,9 @@ export default function MobileNav({ links, logoUrl }: Props) {
                     <div className="mt-2 h-px bg-gray-200" />
                     <a href="http://localhost:3001/login" className="px-3 py-3 rounded-lg text-gray-800 hover:bg-gray-100 transition-colors">Войти</a>
                     <a href="http://localhost:3001/register" className="px-3 py-3 rounded-lg bg-teal-600 text-white hover:bg-teal-500 transition-colors">Регистрация</a>
+                    <div className="mt-4">
+                        <ThemeToggle inDrawer className="w-full" />
+                    </div>
                 </nav>
                 <div className="px-5 py-4 border-t border-gray-200/80 text-xs text-gray-500 flex items-center justify-between">
                     <span>© {new Date().getFullYear()} GARmonia</span>
