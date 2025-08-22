@@ -1,86 +1,82 @@
 "use client";
-import type { Metadata } from "next";
 import "../app/globals.css";
 
+import localFont from "next/font/local";
+import { Montserrat, Manrope } from "next/font/google";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { logoutUser } from "../src/lib/apiAuth";
 import Link from "next/link";
 
+const geistSans = localFont({
+  src: "../app/fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+});
+const geistMono = localFont({
+  src: "../app/fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+});
+const montserrat = Montserrat({ subsets: ["latin", "cyrillic"], variable: "--font-brand", weight: ["300", "400", "600", "700", "800", "900"] });
+const manrope = Manrope({ subsets: ["latin", "cyrillic"], variable: "--font-ui", weight: ["400", "500", "600", "700"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-    const router = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    useEffect(() => {
-        const checkLoginStatus = async () => {
-            try {
-                const res = await fetch("http://localhost:8055/users/me", {
-                    credentials: "include",
-                });
-                setIsLoggedIn(res.ok);
-            } catch (error) {
-                setIsLoggedIn(false);
-            }
-        };
-
-        checkLoginStatus();
-    }, []);
-
-    if (typeof window !== "undefined" && !isLoggedIn && window.location.pathname !== "/login" && window.location.pathname !== "/register") {
-        // Можно сделать редирект или оставить как есть
-    }
-
-    function handleLogout() {
-        logoutUser();
-        router.push("/login");
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const res = await fetch("http://localhost:8055/users/me", { credentials: "include" });
+        setIsLoggedIn(res.ok);
+      } catch (error) {
         setIsLoggedIn(false);
-    }
+      }
+    };
+    checkLoginStatus();
+  }, []);
 
-    return (
-        <html lang="ru" className="h-full">
-        <body className="bg-[url('http://localhost:8055/assets/e58e10de-dd15-4e4b-a465-ea6e8d9a1073.png')] bg-cover bg-center min-h-[100svh] md:min-h-screen flex flex-col bg-gradient-to-b from-green-100 via-blue-100 to-blue-200 text-gray-900">
-        {/* Хедер */}
-        <header className="fixed top-0 left-0 w-full bg-gradient-to-r from-green-400 to-blue-400 text-white shadow-lg z-50">
-            <div className="max-w-5xl mx-auto flex justify-between items-center p-4">
-                <div className="flex items-center">
-                    <img
-                        src={'http://localhost:8055/assets/3722dc90-08cb-4bbb-a082-08a45304d23e.svg'}
-                        alt="Логотип"
-                        className="h-10 w-auto object-contain"
-                    />
-                    <span className="ml-2 text-xl font-bold">
-                      GAR<span className="bg-gradient-to-r from-[#fbb040] to-[#f9ed32] bg-clip-text text-transparent">MONIA</span>
-                    </span>
-                </div>
-                <nav className="flex gap-6 text-white font-medium">
-                    {isLoggedIn ? (
-                        <>
-                            <Link href="/dashboard" className="hover:underline hover:scale-105 transition-transform">Дашборд</Link>
-                            <Link href="/videos" className="hover:underline hover:scale-105 transition-transform">Видео</Link>
-                            <Link href="/profile" className="hover:underline hover:scale-105 transition-transform">Профиль</Link>
-                            <button onClick={handleLogout} className="hover:underline hover:scale-105 transition-transform">Выйти</button>
-                        </>
-                    ) : (
-                        <>
-                            <Link href="/login" className="hover:underline hover:scale-105 transition-transform">Войти</Link>
-                            <Link href="/register" className="hover:underline hover:scale-105 transition-transform">Регистрация</Link>
-                        </>
-                    )}
+  function handleLogout() {
+    logoutUser();
+    router.push("/login");
+    setIsLoggedIn(false);
+  }
+
+  return (
+    <html lang="ru">
+      <body className={`min-h-screen overflow-hidden bg-gradient-to-b from-slate-100 to-sky-200 text-gray-900 ${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${manrope.variable}`} style={{ fontFamily: 'var(--font-ui), var(--default-font-family, ui-sans-serif, system-ui, sans-serif)' }}>
+        <header className="fixed top-0 left-0 w-full z-50">
+          <div className="mx-auto max-w-6xl">
+            <div className="m-0 rounded-b-2xl bg-white/80 backdrop-blur-md shadow px-3 md:px-4 py-3 flex items-center ring-1 ring-black/5 transition-all duration-300">
+              <Link href="/" className="flex items-center gap-2">
+                <img src="/logo-sunset.svg" alt="GARmonia" className="h-6 w-6" />
+                <span className="text-lg md:text-xl lg:text-xl xl:text-2xl font-semibold tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(180deg, #0ea5e9, #14b8a6)" }}>GARmonia</span>
+              </Link>
+              <div className="flex items-center gap-3 min-w-0 ml-auto justify-end">
+                <nav className="flex min-w-0 items-center gap-2 lg:gap-3 xl:gap-4 text-[11px] lg:text-xs text-gray-700 overflow-x-auto whitespace-nowrap pr-1">
+                  {isLoggedIn ? (
+                    <>
+                      <Link href="/dashboard" className="px-2 py-1 rounded transition-colors hover:bg-gradient-to-r hover:from-sky-500 hover:to-teal-600 hover:text-white">Дашборд</Link>
+                      <Link href="/videos" className="px-2 py-1 rounded transition-colors hover:bg-gradient-to-r hover:from-sky-500 hover:to-teal-600 hover:text-white">Видео</Link>
+                      <Link href="/profile" className="px-2 py-1 rounded transition-colors hover:bg-gradient-to-r hover:from-sky-500 hover:to-teal-600 hover:text-white">Профиль</Link>
+                      <button onClick={handleLogout} className="px-2 py-1 rounded transition-colors hover:bg-gradient-to-r hover:from-sky-500 hover:to-teal-600 hover:text-white">Выйти</button>
+                    </>
+                  ) : (
+                    <>
+                      <Link href="/login" className="px-2 py-1 rounded hover:text-gray-900 hover:bg-gradient-to-b hover:from-white hover:to-white/70 transition-colors">Войти</Link>
+                      <Link href="/register" className="px-3 py-1.5 rounded-full bg-gradient-to-r from-sky-500 to-teal-600 text-white shadow-sm hover:from-sky-400 hover:to-teal-500 transition-colors">Регистрация</Link>
+                    </>
+                  )}
                 </nav>
+              </div>
             </div>
+          </div>
         </header>
-
-        {/* Контент */}
-        <main className="pt-24 px-4 flex-1 flex justify-center items-start">
-            <div className="w-full max-w-5xl">{children}</div>
+        <main id="app-scroll" className="h-screen overflow-y-auto transition-[filter] duration-300 will-change-auto relative pt-24 px-4">
+          <div className="pointer-events-none fixed inset-0 z-0 bg-center bg-cover" style={{ backgroundImage: "url('http://localhost:8055/assets/e58e10de-dd15-4e4b-a465-ea6e8d9a1073.png')" }} />
+          <div className="relative z-10 w-full max-w-5xl mx-auto">{children}</div>
         </main>
-
-        {/* Футер */}
-        <footer className="p-4 bg-gradient-to-r from-green-400 to-blue-400 text-white text-center text-sm">
-            © {new Date().getFullYear()} GARmonia. Все права защищены.
-        </footer>
-        </body>
-        </html>
-    );
+        <footer className="p-4 text-center text-sm text-gray-600">© {new Date().getFullYear()} GARmonia</footer>
+      </body>
+    </html>
+  );
 }

@@ -1,12 +1,22 @@
 @import "tailwindcss";
 
 /* Smooth scroll and overflow guard */
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth;  min-width: 450px; }
 body { overscroll-behavior-y: none; }
 
 /* Blur and lock when mobile menu is open */
-:root.menu-open body { overflow: hidden; }
-:root.menu-open main { filter: blur(3px); }
+html.menu-open body { overflow: hidden; }
+html.menu-open main { filter: blur(3px); }
 
 /* responsive helpers */
 .text-fluid-hero { font-size: clamp(3rem, 16vw, 16rem); line-height: .9; }
+
+/* Dark theme color inversion (global) */
+body[data-theme="dark"] { filter: invert(1) hue-rotate(180deg); }
+/* Revert inversion for media so photos/videos/canvas/svg look natural */
+body[data-theme="dark"] img,
+body[data-theme="dark"] picture,
+body[data-theme="dark"] video,
+body[data-theme="dark"] canvas,
+body[data-theme="dark"] svg { filter: invert(1) hue-rotate(180deg) }
+

@@ -8,8 +8,8 @@ type Props = {
     className?: string;
 };
 
-const LIGHT = { key: "light", from: "from-slate-100", to: "to-sky-200", text: "text-gray-900" };
-const DARK  = { key: "dark",  from: "from-slate-900", to: "to-sky-950", text: "text-slate-100" };
+const LIGHT = { key: "light" } as const;
+const DARK  = { key: "dark" } as const;
 
 export default function ThemeToggle({ compact = false, inDrawer = false, className = "" }: Props) {
     const [dark, setDark] = useState(false);
@@ -21,9 +21,6 @@ export default function ThemeToggle({ compact = false, inDrawer = false, classNa
 
     useEffect(() => {
         const body = document.body;
-        [LIGHT, DARK].forEach((t) => body.classList.remove(t.from, t.to, t.text));
-        const next = dark ? DARK : LIGHT;
-        body.classList.add(next.from, next.to, next.text);
         body.setAttribute("data-theme", dark ? "dark" : "light");
         try { window.localStorage.setItem("theme", dark ? DARK.key : LIGHT.key); } catch {}
     }, [dark]);
