@@ -1,23 +1,22 @@
-export async function loginUser(email: string, password: string): Promise<string> {
-    const res = await fetch("http://localhost:8000/auth/login", {
+export async function loginUser(email: string, password: string): Promise<void> {
+    const res = await fetch("http://localhost:8055/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
     });
 
     if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.message || "Ошибка входа");
+        throw new Error(error?.errors?.[0]?.message || "Ошибка входа");
     }
-
-    const data = await res.json();
-    localStorage.setItem("token", data.token); // Сохраняем JWT
-    return data.token;
 }
 
 export async function logoutUser() {
-    await fetch("http://localhost:8055/auth/logout", {
+    const res = await fetch("/api/logout", {
         method: "POST",
-        credentials: "include", // важно: удалит cookie
+        credentials: "include",
+        cache: "no-store",
     });
+    if (!res.ok) throw new Error("Не удалось выполнить logout");
 }

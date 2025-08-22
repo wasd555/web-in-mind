@@ -85,13 +85,77 @@ export default function Home() {
     }, []);
 
     const [showSticky, setShowSticky] = useState(false);
+    // Sticky bar + breathing scroll
     useEffect(() => {
         const scroller = document.getElementById("app-scroll");
         if (!scroller) return;
-        const onScroll = () => setShowSticky(scroller.scrollTop > 120);
+        document.body.classList.add("breathing");
+        const onScroll = () => {
+            setShowSticky(scroller.scrollTop > 120);
+            const y = scroller.scrollTop || 0;
+            const wave = Math.sin(y / 140);
+            const scale = 1 + 0.06 * wave; // заметнее (до ~6%)
+            const ty = (8 * wave).toFixed(2) + "px"; // вертикальный сдвиг
+            document.documentElement.style.setProperty("--breath-scale", scale.toFixed(3));
+            document.documentElement.style.setProperty("--breath-ty", ty);
+        };
         scroller.addEventListener("scroll", onScroll, { passive: true });
         onScroll();
-        return () => scroller.removeEventListener("scroll", onScroll as any);
+        return () => {
+            scroller.removeEventListener("scroll", onScroll as any);
+            document.body.classList.remove("breathing");
+        };
+    }, []);
+
+    // Time-of-day palette
+    useEffect(() => {
+        const updatePhase = () => {
+            const h = new Date().getHours();
+            const phase = h >= 5 && h < 11 ? "morning" : h >= 11 && h < 17 ? "day" : h >= 17 && h < 22 ? "evening" : "night";
+            document.body.setAttribute("data-phase", phase);
+        };
+        updatePhase();
+        const id = setInterval(updatePhase, 60 * 1000);
+        return () => clearInterval(id);
+    }, []);
+
+    // Audio hover chime (no assets, WebAudio)
+    const audioCtxRef = useRef<AudioContext | null>(null);
+    const playChime = (variant: number = 0) => {
+        if (typeof window === "undefined") return;
+        // @ts-ignore - webkit fallback
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!audioCtxRef.current) {
+            try { audioCtxRef.current = new Ctx(); } catch { return; }
+        }
+        const ctx = audioCtxRef.current!;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const base = [528, 396, 639, 741][variant % 4] || 528; // мягкие частоты
+        osc.type = "sine";
+        osc.frequency.value = base;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.07, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+    };
+
+    // Mini dashboard state
+    const [streak, setStreak] = useState(3);
+    const [dayProgress, setDayProgress] = useState(0.35);
+    useEffect(() => {
+        const id = setInterval(() => {
+            setDayProgress((p) => {
+                const np = p + 0.01;
+                return np > 1 ? 1 : np;
+            });
+        }, 4000);
+        return () => clearInterval(id);
     }, []);
 
     return (
@@ -111,10 +175,10 @@ export default function Home() {
                 <div className="pointer-events-none absolute inset-0 z-10 aurora" aria-hidden />
                 <div className="relative z-20 w-full px-6 reveal">
                     <div className="mx-auto max-w-7xl">
-                        <h1 className="w-full text-left whitespace-nowrap leading-[0.9] font-light tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-slate-900 to-slate-700 text-[14vw] sm:text-[12vw] md:text-[10rem] lg:text-[12rem] xl:text-[14rem] 2xl:text-[14.5rem]" style={{ fontFamily: 'var(--font-brand), var(--font-ui)' }}>
-                            <span className="brand-accent">GAR</span>m
+                        <h1 className="w-full text-left whitespace-nowrap leading-[0.9] font-thin tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-slate-900 to-slate-700 text-[14vw] sm:text-[12vw] md:text-[10rem] lg:text-[12rem] xl:text-[14rem] 2xl:text-[14.5rem]" style={{ fontFamily: 'var(--font-brand), var(--font-ui)' }}>
+                            <span className="brand-accent">GARM
                             <img src="/logo-sunset.svg" alt="О" className="inline-block align-baseline mx-[0.06em]" style={{ width: '0.7em', height: '0.7em' }} />
-                            nia
+                            NIA</span>
                         </h1>
                         <div className="mt-3 h-[2px] w-[min(90vw,960px)] overflow-hidden rounded-full spectrum" />
                         <div className="mt-6 grid md:grid-cols-2 items-start gap-10">
@@ -356,7 +420,6 @@ export default function Home() {
                                 ))}
                             </div>
                             <a href="#offerings" className="mt-8 inline-flex rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Пройти диагностику</a>
-                            <a href="#offerings" className="mt-8 inline-flex rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Пройти диагностику</a>
                         </div>
                         <div className="reveal order-first md:order-none">
                             <div data-parallax data-parallax-speed="0.06" className="relative mx-auto w-full max-w-md aspect-[4/3] rounded-3xl bg-white/70 backdrop-blur-md shadow-lg overflow-hidden float-soft">
@@ -400,7 +463,7 @@ export default function Home() {
                             { title: "Практики 5–10 мин", desc: "Когда важна мягкая регулярность.", color: "from-emerald-50 to-white" },
                             { title: "Инд. сессии", desc: "Лично и конфиденциально.", color: "from-amber-50 to-white" },
                           ].map((c, i) => (
-                            <div key={i} className={`rounded-2xl p-5 ring-1 ring-black/5 bg-gradient-to-br ${c.color} hover:shadow-md transition-shadow`}>
+                            <div key={i} onMouseEnter={() => playChime(i)} className={`rounded-2xl p-5 ring-1 ring-black/5 bg-gradient-to-br ${c.color} hover:shadow-md transition-shadow`}>
                               <p className="font-medium text-gray-800">{c.title}</p>
                               <p className="text-sm text-gray-600 mt-1">{c.desc}</p>
                             </div>
@@ -417,7 +480,7 @@ export default function Home() {
                             { title: "Антитревога", chip: "день" },
                             { title: "Лёгкое утро", chip: "утро" },
                           ].map((r, i) => (
-                            <div key={i} className="rounded-2xl p-5 bg-white/70 ring-1 ring-black/5 hover:shadow-md transition-shadow">
+                            <div key={i} onMouseEnter={() => playChime(i+1)} className="rounded-2xl p-5 bg-white/70 ring-1 ring-black/5 hover:shadow-md transition-shadow">
                               <div className="flex items-center justify-between">
                                 <p className="font-medium text-gray-800">{r.title}</p>
                                 <span className="px-2 py-0.5 text-[10px] rounded-full bg-amber-100 text-amber-700">{r.chip}</span>
@@ -429,6 +492,22 @@ export default function Home() {
                               </div>
                             </div>
                           ))}
+                        </div>
+                    </div>
+                    {/* Mini Dashboard: Ваш ритм */}
+                    <div className="reveal rounded-3xl bg-white/60 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <h3 className="text-2xl md:text-4xl font-semibold text-gray-800">Ваш ритм</h3>
+                          <span className="px-3 py-1 rounded-full text-xs md:text-sm bg-sky-100 text-sky-700">серия {streak} дн.</span>
+                        </div>
+                        <p className="mt-3 text-gray-600 text-base md:text-lg">Мягкий прогресс без спешки. Сегодня вы на {Math.round(dayProgress*100)}% ближе к балансу.</p>
+                        <div className="mt-5 h-3 w-full rounded-full bg-gray-200 overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-teal-500 to-sky-500" style={{ width: `${Math.max(0, Math.min(100, dayProgress*100))}%` }} />
+                        </div>
+                        <div className="mt-4 text-sm text-gray-700 flex items-center gap-3 flex-wrap">
+                          <span className="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700">Совет дня: 2 цикла дыхания 4–7–8</span>
+                          <a href="#" className="rounded-full bg-teал-600 text-white px-3 py-1.5 text-sm hover:bg-teal-500 transition-colors">Добавить напоминание</a>
+                          <a href="#" className="rounded-full bg-white/80 px-3 py-1.5 text-sm text-gray-800 shadow hover:bg-white transition-colors">Открыть дашборд</a>
                         </div>
                     </div>
                     {/* Schedule */}
@@ -916,6 +995,18 @@ export default function Home() {
               .reveal.revealed > * { opacity: 1; transform: translateY(0); }
               /* theme-aware backgrounds */
               body[data-theme="dark"] [data-theme-bg] { filter: brightness(0.7) saturate(0.9) hue-rotate(-10deg); }
+              /* breathing scroll */
+              .breathing [data-theme-bg] {
+                transform: translate3d(0, var(--breath-ty, 0px), 0) scale(var(--breath-scale, 1));
+                transform-origin: 50% 0%;
+                transition: transform .35s ease-out;
+                will-change: transform;
+              }
+              /* day-phase filters */
+              body[data-phase="morning"] [data-theme-bg] { filter: hue-rotate(-6deg) saturate(1.05) brightness(1.03); }
+              body[data-phase="day"] [data-theme-bg] { filter: hue-rotate(0deg) saturate(1) brightness(1); }
+              body[data-phase="evening"] [data-theme-bg] { filter: hue-rotate(6deg) saturate(0.98) brightness(0.98); }
+              body[data-phase="night"] [data-theme-bg] { filter: hue-rotate(12deg) saturate(0.92) brightness(0.92); }
               /* Aurora */
               .aurora { 
                 background: radial-gradient(1200px 400px at 20% 30%, rgba(99,102,241,.18), transparent 50%),
@@ -934,7 +1025,7 @@ export default function Home() {
               /* Neon line */
               .neon-line { background: linear-gradient(90deg, rgba(13,148,136,0), rgba(13,148,136,.8), rgba(56,189,248,.8), rgba(13,148,136,0)); box-shadow: 0 0 10px rgba(56,189,248,.35); }
               /* Brand accent for GAR */
-              .brand-accent { background: linear-gradient(180deg, #0ea5e9, #14b8a6); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 6px 16px rgba(56,189,248,.15)); }
+              .brand-accent { background: linear-gradient(180deg, #000, #14b8a6); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 6px 16px rgba(56,189,248,.15)); }
               /* Live equalizer */
               .eq span { height: 6px; animation: eq 1.2s ease-in-out infinite; border-radius: 2px; }
               @keyframes eq { 0%,100%{ height:6px } 40%{ height: 100% } 70%{ height: 40% } }

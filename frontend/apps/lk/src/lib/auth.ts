@@ -1,14 +1,27 @@
+import { headers } from "next/headers";
+
 export async function getUser() {
-    const res = await fetch('http://localhost:8055/auth/me', {
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        // next: { revalidate: 0 } — если используешь app router с SSR
+    const incomingHeaders = await headers();
+    const cookie = incomingHeaders.get("cookie") || "";
+    const origin = process.env.NEXT_PUBLIC_APP_ORIGIN || "http://localhost:3002";
+    const url = new URL("/api/me", origin);
+    url.searchParams.set(
+        "fields",
+        [
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "avatar",
+            "role.name",
+        ].join(",")
+    );
+    const res = await fetch(url.toString(), {
+        headers: { cookie },
+        cache: "no-store",
     });
-
     if (!res.ok) return null;
-
-    const user = await res.json();
+    const raw = await res.json();
+    const user = raw?.data ?? raw;
     return user;
 }

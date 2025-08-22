@@ -17,7 +17,7 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
 });
 
-const montserrat = Montserrat({ subsets: ["latin", "cyrillic"], variable: "--font-brand", weight: ["300", "400", "600", "700", "800", "900"] });
+const montserrat = Montserrat({ subsets: ["latin", "cyrillic"], variable: "--font-brand", weight: ["100", "200", "300", "400", "600", "700", "800", "900"] });
 const manrope = Manrope({ subsets: ["latin", "cyrillic"], variable: "--font-ui", weight: ["400", "500", "600", "700"] });
 
 export const metadata: Metadata = {

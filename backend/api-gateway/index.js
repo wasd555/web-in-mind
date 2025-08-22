@@ -3,6 +3,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const authenticateToken = require("./middleware/auth");
+const directusSessionAuth = require("./middleware/directusSession");
 const authRouter = require("./routes/auth.js");
 const videosRouter = require("./routes/videos.js");
 const probeRouter = require("./routes/readiness");
@@ -27,7 +28,7 @@ app.use(rateLimit({
 
 app.use(express.json());
 app.use("/auth", authRouter);
-app.use("/videos", authenticateToken, videosRouter);
+app.use("/videos", directusSessionAuth, videosRouter);
 app.use("/", probeRouter);
 
 app.get("/admin", authenticateToken, (req, res) => {

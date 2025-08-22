@@ -1,8 +1,11 @@
-import ProtectedRoute from "../../src/components/ProtectedRoute";
+import { getUser } from "../../src/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function SubscriptionPage() {
+export default async function SubscriptionPage() {
+    const user = await getUser();
+    if (!user) redirect("/login");
+
     return (
-        <ProtectedRoute>
             <div className="py-10 text-center">
                 <h1 className="text-3xl font-extrabold text-green-700 mb-4">
                     Подписка
@@ -22,6 +25,5 @@ export default function SubscriptionPage() {
                     </button>
                 </div>
             </div>
-        </ProtectedRoute>
     );
 }

@@ -19,3 +19,8 @@ body[data-theme="dark"] picture,
 body[data-theme="dark"] video,
 body[data-theme="dark"] canvas,
 body[data-theme="dark"] svg { filter: invert(1) hue-rotate(180deg) }
+
+/* Pointer cursor on hover for interactive elements */
+a:hover,
+button:hover,
+[role="button"]:hover { cursor: pointer; }

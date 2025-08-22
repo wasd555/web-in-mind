@@ -15,12 +15,11 @@ export default function LoginPage() {
         e.preventDefault();
         setError("");
         try {
-            const res = await fetch("http://localhost:8055/auth/login", {
+            const res = await fetch("/api/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                credentials: "include",
                 body: JSON.stringify({
                     email,
                     password,
@@ -28,10 +27,18 @@ export default function LoginPage() {
             });
 
             if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData?.errors?.[0]?.message || "Ошибка входа");
+                const errorData = await res.json().catch(() => ({}));
+                const msg = (errorData?.errors?.[0]?.message || "Ошибка входа").toLowerCase();
+                if (msg.includes("invalid") || msg.includes("credentials")) {
+                    throw new Error("Неверный email или пароль");
+                }
+                throw new Error("Ошибка входа");
             }
 
+            // Сообщаем layout, что сессия появилась
+            if (typeof window !== "undefined") {
+                window.dispatchEvent(new Event("auth:login"));
+            }
             router.push("/dashboard");
         } catch (err: any) {
             setError(err.message);
@@ -41,7 +48,7 @@ export default function LoginPage() {
     return (
         <div className="flex items-center justify-center min-h-[calc(100vh-96px)] px-4">
             <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md transform transition-all hover:scale-[1.01] duration-200">
-                <h2 className="text-3xl font-extrabold text-center mb-6 text-green-700">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-6 tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(180deg, #0ea5e9, #14b8a6)" }}>
                     Вход
                 </h2>
                 {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
@@ -82,7 +89,7 @@ export default function LoginPage() {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 hover:scale-[1.02] transition-transform duration-200 font-semibold shadow-md"
+                        className="w-full px-3 py-3 rounded-full bg-gradient-to-r from-sky-500 to-teal-600 text-white shadow-sm hover:from-sky-400 hover:to-teal-500 transition-all font-semibold text-base"
                     >
                         Войти
                     </button>

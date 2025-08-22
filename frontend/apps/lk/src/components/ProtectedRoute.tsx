@@ -9,18 +9,19 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     const router = useRouter();
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            router.push("/login");
-        } else {
-            setIsAuthenticated(true);
+        async function check() {
+            try {
+                const res = await fetch("http://localhost:8055/users/me", { credentials: "include" });
+                if (res.ok) setIsAuthenticated(true); else router.push("/login");
+            } catch (e) {
+                router.push("/login");
+            } finally {
+                setLoading(false);
+            }
         }
-        setLoading(false);
+        check();
     }, [router]);
 
-    if (loading) {
-        return <div className="flex justify-center items-center h-screen">Загрузка...</div>;
-    }
-
+    if (loading) return <div className="flex justify-center items-center h-screen">Загрузка...</div>;
     return isAuthenticated ? <>{children}</> : null;
 }

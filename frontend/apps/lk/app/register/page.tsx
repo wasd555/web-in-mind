@@ -13,6 +13,27 @@ export default function RegisterPage() {
     const [success, setSuccess] = useState("");
     const router = useRouter();
 
+    function translateDirectusError(errData: any): string {
+        try {
+            const e = errData?.errors?.[0];
+            const msg: string = e?.message || "Ошибка регистрации";
+            const code: string = e?.extensions?.code || "";
+            const lower = msg.toLowerCase();
+            if (lower.includes("password") || lower.includes("format") || lower.includes("validation failed")) {
+                return "Пароль не соответствует требованиям. Минимум 8 символов. Примеры: 'Qwerty123', 'Sunset_2025!'";
+            }
+            if (lower.includes("already exists") || code === "RECORD_NOT_UNIQUE") {
+                return "Пользователь с таким email уже существует";
+            }
+            if (code === "INVALID_PAYLOAD") {
+                return "Некорректные данные. Проверьте поля формы";
+            }
+            return msg;
+        } catch {
+            return "Ошибка регистрации";
+        }
+    }
+
     async function handleRegister(e: React.FormEvent) {
         e.preventDefault();
         setError("");
@@ -23,8 +44,13 @@ export default function RegisterPage() {
             return;
         }
 
+        if (password.length < 8) {
+            setError("Пароль слишком короткий. Минимум 8 символов. Примеры: 'Qwerty123', 'Sunset_2025!'");
+            return;
+        }
+
         try {
-            const res = await fetch("http://localhost:8055/users", {
+            const res = await fetch("/api/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -38,9 +64,11 @@ export default function RegisterPage() {
             });
 
             if (!res.ok) {
-                const data = await res.json();
-                throw new Error(data.errors?.[0]?.message || "Ошибка регистрации");
+                const data = await res.json().catch(() => ({}));
+                throw new Error(translateDirectusError(data));
             }
+
+            // Профиль подтянется при логине; здесь просто редиректим на /login
 
             setSuccess("Регистрация успешна! Переход на страницу входа...");
             setTimeout(() => router.push("/login"), 1500);
@@ -52,7 +80,7 @@ export default function RegisterPage() {
     return (
         <div className="flex items-center justify-center min-h-[calc(100vh-96px)] px-4">
             <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md transform transition-all hover:scale-[1.01] duration-200">
-                <h2 className="text-3xl font-extrabold text-center mb-6 text-green-700">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-center mb-6 tracking-tight bg-clip-text text-transparent" style={{ backgroundImage: "linear-gradient(180deg, #0ea5e9, #14b8a6)" }}>
                     Регистрация
                 </h2>
                 {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
@@ -119,6 +147,7 @@ export default function RegisterPage() {
                             className="block w-full rounded-lg border-gray-300 p-3 shadow-sm focus:border-green-400 focus:ring-green-400 transition-colors"
                             required
                         />
+                        <p className="mt-2 text-xs text-gray-500">Минимум 8 символов. Примеры: <span className="font-mono">Qwerty123</span>, <span className="font-mono">Sunset_2025!</span></p>
                     </div>
                     <div className="mb-6">
                         <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
@@ -136,7 +165,7 @@ export default function RegisterPage() {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 hover:scale-[1.02] transition-transform duration-200 font-semibold shadow-md"
+                        className="w-full px-3 py-3 rounded-full bg-gradient-to-r from-sky-500 to-teal-600 text-white shadow-sm hover:from-sky-400 hover:to-teal-500 transition-all font-semibold text-base"
                     >
                         Зарегистрироваться
                     </button>
