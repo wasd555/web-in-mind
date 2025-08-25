@@ -85,39 +85,7 @@ export default function Home() {
     }, []);
 
     const [showSticky, setShowSticky] = useState(false);
-    // Sticky bar + breathing scroll
-    useEffect(() => {
-        const scroller = document.getElementById("app-scroll");
-        if (!scroller) return;
-        document.body.classList.add("breathing");
-        const onScroll = () => {
-            setShowSticky(scroller.scrollTop > 120);
-            const y = scroller.scrollTop || 0;
-            const wave = Math.sin(y / 140);
-            const scale = 1 + 0.06 * wave; // заметнее (до ~6%)
-            const ty = (8 * wave).toFixed(2) + "px"; // вертикальный сдвиг
-            document.documentElement.style.setProperty("--breath-scale", scale.toFixed(3));
-            document.documentElement.style.setProperty("--breath-ty", ty);
-        };
-        scroller.addEventListener("scroll", onScroll, { passive: true });
-        onScroll();
-        return () => {
-            scroller.removeEventListener("scroll", onScroll as any);
-            document.body.classList.remove("breathing");
-        };
-    }, []);
 
-    // Time-of-day palette
-    useEffect(() => {
-        const updatePhase = () => {
-            const h = new Date().getHours();
-            const phase = h >= 5 && h < 11 ? "morning" : h >= 11 && h < 17 ? "day" : h >= 17 && h < 22 ? "evening" : "night";
-            document.body.setAttribute("data-phase", phase);
-        };
-        updatePhase();
-        const id = setInterval(updatePhase, 60 * 1000);
-        return () => clearInterval(id);
-    }, []);
 
     // Audio hover chime (no assets, WebAudio)
     const audioCtxRef = useRef<AudioContext | null>(null);
@@ -162,7 +130,7 @@ export default function Home() {
         <div className="w-full relative">
             <ScrollEffects />
             {showSticky && (
-                <div className="fixed top-[76px] left-1/2 -translate-x-1/2 z-40">
+                <div className="fixed top-[100px] left-1/2 -translate-x-1/2 z-40">
                     <div className="glass rounded-full px-3 py-2 shadow flex items-center gap-2 text-xs md:text-sm">
                         <span className="inline-flex items-center gap-1 text-gray-800"><span className="h-2 w-2 rounded-full bg-rose-500 animate-pulse" /> Ближайший эфир через {mm}:{ss}</span>
                         <a href="#offerings" className="rounded-full bg-teal-600 text-white px-3 py-1 hover:bg-teal-500 transition-colors">Напомнить</a>
@@ -170,46 +138,53 @@ export default function Home() {
                 </div>
             )}
             {/* Hero */}
-            <section id="hero" className="relative h-screen snap-start flex items-center justify-center overflow-visible">
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-white/70 via-sky-100/70 to-emerald-100/60" data-theme-bg />
+            <section id="hero" className="relative h-screen snap-start flex items-start justify-center overflow-visible pt-30 md:pt-50">
+                {/* white border 20px + max width 2000px */}
+                <div className="absolute inset-0 z-0 bg-white">
+                    <div className="h-full w-full max-w-[4000px] mx-auto p-5">
+                        <div className="w-full h-full rounded-[16px] overflow-hidden relative">
+                            <img src="/bg-hero8.png" alt="" className="w-full h-full object-cover object-right" />
+                            <div className="hero-glass-sweep absolute inset-0 pointer-events-none" />
+                        </div>
+                    </div>
+                </div>
                 <div className="pointer-events-none absolute inset-0 z-10 aurora" aria-hidden />
                 <div className="relative z-20 w-full px-6 reveal">
-                    <div className="mx-auto max-w-7xl">
-                        <h1 className="w-full text-left whitespace-nowrap leading-[0.9] font-thin tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-slate-900 to-slate-700 text-[14vw] sm:text-[12vw] md:text-[10rem] lg:text-[12rem] xl:text-[14rem] 2xl:text-[14.5rem]" style={{ fontFamily: 'var(--font-brand), var(--font-ui)' }}>
-                            <span className="brand-accent">GARM
-                            <img src="/logo-sunset.svg" alt="О" className="inline-block align-baseline mx-[0.06em]" style={{ width: '0.7em', height: '0.7em' }} />
-                            NIA</span>
-                        </h1>
-                        <div className="mt-3 h-[2px] w-[min(90vw,960px)] overflow-hidden rounded-full spectrum" />
-                        <div className="mt-6 grid md:grid-cols-2 items-start gap-10">
+                    <div className="mx-auto max-w-[2000px]">
+                        <div className="w-full mx-auto px-2 sm:px-4 md:px-6">
+                            <img src="/garmonia-logo.svg" alt="GARmonia" className="block w-full h-auto" />
+                        </div>
+                        <div className="mt-6 max-w-full">
+                        <div className="flex flex-col items-center justify-center gap-10">
                         {/* Left: brand, lines, text, stats, ctas */}
-                        <div className="text-left md:pr-6">
-                            <p className="mt-2 text-base md:text-xl text-gray-700 max-w-xl">
+                        <div className="text-center md:pr-0">
+                            <p className="mt-20 text-base sm:text-5xl text-gray-100 max-w-7xl">
                                 Платформа для прямых эфиров и видео от психологов и врачей. Найдите баланс, вдохновение и поддержку.
                             </p>
-                            <div className="mt-6 grid grid-cols-3 max-w-md gap-3 text-sm">
-                                <div className="glass px-3 py-2 rounded-xl">
+                            <div className="mt-6 grid grid-cols-3 max-w-md gap-3 text-sm mx-auto">
+                                <div className="glass metric px-3 py-2 rounded-2xl">
                                     <p className="font-medium text-gray-800">Экспертов</p>
                                     <p className="text-teal-600 text-lg">50+</p>
                                 </div>
-                                <div className="glass px-3 py-2 rounded-xl">
+                                <div className="glass metric px-3 py-2 rounded-2xl">
                                     <p className="font-medium text-gray-800">Видео</p>
                                     <p className="text-sky-600 text-lg">1 200+</p>
                                 </div>
-                                <div className="glass px-3 py-2 rounded-xl">
+                                <div className="glass metric px-3 py-2 rounded-2xl">
                                     <p className="font-medium text-gray-800">Эфиры в месяц</p>
                                     <p className="text-emerald-600 text-lg">30+</p>
                                 </div>
                             </div>
-                            <div className="mt-8 flex items-center gap-4">
+                            <div className="mt-8 flex items-center justify-center gap-4">
                                 <a href="http://localhost:3001/register" className="rounded-full bg-teal-600 text-white px-5 md:px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Начать путь</a>
                                 <a href="#about" className="rounded-full bg-white/80 px-5 md:px-6 py-3 text-sm md:text-base text-gray-800 shadow hover:bg-white transition-colors">Узнать больше</a>
                             </div>
-                            <div className="mt-4 h-[3px] w-[min(70vw,520px)] md:w-[460px] neon-line" />
                         </div>
-                        {/* Right: live preview card */}
-                        <div className="block mt-6 md:mt-0">
-                            <div className="relative mx-auto max-w-lg w-full aspect-[4/3] rounded-3xl overflow-hidden ring-1 ring-black/5 bg-white/50 backdrop-blur-xl shadow-lg live-card max-[450px]:aspect-[16/9]">
+                        </div>
+                        {/* Right: live preview card (hidden) */}
+                        {false && (
+                        <div className="block mt-6 sm:mt-0 sm:ml-auto shrink-0">
+                            <div className="relative mx-auto sm:mx-0 max-w-lg w-full aspect-[4/3] rounded-3xl overflow-hidden ring-1 ring-black/5 bg-white/50 backdrop-blur-xl shadow-lg live-card max-[450px]:aspect-[16/9]">
                                 {/* mock background */}
                                 <Image src="/live-mock-upload.png" alt="Live" fill className="object-cover z-0 opacity-20" />
                                 {/* overlays */}
@@ -249,75 +224,19 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
+                        )}
                         </div>
                     </div>
                 </div>
-                {/* wave to next (color matches next section top) */}
-                <div className="pointer-events-none absolute bottom-[-1px] left-0 right-0 z-10 text-teal-100/60">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
+                
             </section>
-
-            {/* Quick Diagnostic (legacy) - merged into about */}
-            {false && (
-            <section id="discover" className="relative min-h-screen snap-start overflow-hidden flex items-center py-16">
-                <Image src="/bg-section-calm.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-sky-100/70 via-white/70 to-emerald-100/70" data-theme-bg />
-                <div className="pointer-events-none absolute top-[-1px] left-0 right-0 z-10 text-sky-100/60 rotate-180">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
-                <div className="relative z-20 mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-10 items-center">
-                    <div className="reveal rounded-3xl bg-white/60 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">60 секунд к личному маршруту</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg" style={{ ["--d" as any]: 1 }}>
-                            Короткая диагностика подскажет, с чего начать — дыхание, сон, тревога, энергия. Без регистрации, бережно, с рекомендациями на ваш темп.
-                        </p>
-                        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                            {[
-                              { label: "Тревога", color: "bg-teal-50 text-teal-700" },
-                              { label: "Сон", color: "bg-sky-50 text-sky-700" },
-                              { label: "Энергия", color: "bg-emerald-50 text-emerald-700" },
-                              { label: "Отношения", color: "bg-amber-50 text-amber-700" },
-                            ].map((chip, i) => (
-                              <div key={i} className={`px-3 py-2 rounded-full text-center ${chip.color}`} style={{ ["--d" as any]: i+2 }}>{chip.label}</div>
-                            ))}
-                        </div>
-                        <a href="#routes" className="mt-8 inline-flex rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Пройти диагностику</a>
-                    </div>
-                    <div className="reveal order-first md:order-none">
-                        <div data-parallax data-parallax-speed="0.06" className="relative mx-auto w-full max-w-md aspect-[4/3] rounded-3xl bg-white/70 backdrop-blur-md shadow-lg overflow-hidden float-soft">
-                            <Image src="/live-mock-upload.png" alt="Mock" fill className="object-cover opacity-30" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="rounded-2xl bg-white/80 px-4 py-3 text-gray-800 text-center shadow">
-                                <p className="text-sm">3 вопроса</p>
-                                <div className="mt-2 h-2 w-48 rounded-full bg-gray-200 overflow-hidden"><div className="h-full w-1/3 bg-teal-500" /></div>
-                              </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="pointer-events-none absolute bottom-[-1px] left-0 right-0 z-10 text-teal-100/60">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
-            </section>
-            )}
 
             {/* Benefits */}
             <section id="benefits" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <Image src="/bg-section-calm.svg" alt="" fill className="object-cover opacity-70 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-teal-100/60 via-sky-100/60 to-emerald-100/60" data-theme-bg />
-                {/* top wave from previous (same color as this section top) */}
-                <div className="pointer-events-none absolute top-[-1px] left-0 right-0 z-10 text-teal-100/60 rotate-180">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
+                <div className="absolute inset-0 z-0 bg-white">
+
                 </div>
+                
                 <div className="relative z-20 mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-10 items-center">
                     <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
                         <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Почему GARmonia</h2>
@@ -366,23 +285,19 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                {/* wave to next (pricing top ~ white/70) */}
-                <div className="pointer-events-none absolute bottom-[-1px] left-0 right-0 z-10 text-white/70">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
+                
             </section>
 
             {/* About (merged with Discover) */}
             <section id="about" className="relative min-h-screen snap-start overflow-hidden flex items-center py-16">
-                <Image src="/bg-hero-waves.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-white/70 via-sky-100/70 to-emerald-100/70" data-theme-bg />
-                <div className="pointer-events-none absolute top-[-1px] left-0 right-0 z-10 text-white/70 rotate-180">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
+                <div className="absolute inset-0 z-0 bg-white">
+                    <div className="h-full w-full max-w-[4000px] ml-auto p-5">
+                        <div className="w-full h-full rounded-[16px] overflow-hidden relative">
+                            <img src="/bg-hero5.png" alt="" className="w-full h-full object-cover object-right" />
+                        </div>
+                    </div>
                 </div>
+                
                 <div className="relative z-20 mx-auto max-w-6xl px-6 flex flex-col gap-10">
                     {/* About block */}
                     <div className="grid md:grid-cols-2 gap-10 items-center">
@@ -434,23 +349,18 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="pointer-events-none absolute bottom-[-1px] left-0 right-0 z-10 text-emerald-100/70">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
             </section>
 
             {/* Offerings (Форматы + Маршруты + Эфиры) */}
             <section id="offerings" className="relative min-h-screen snap-start overflow-hidden flex items-center py-16">
-                <Image src="/bg-hero-waves.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-white/70 via-sky-100/70 to-emerald-100/70" data-theme-bg />
-                {/* top wave from previous (emerald-100/70) */}
-                <div className="pointer-events-none absolute top-[-1px] left-0 right-0 z-10 text-emerald-100/70 rotate-180">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
+                <div className="absolute inset-0 z-0 bg-white">
+                    <div className="h-full w-full max-w-[4000px] ml-auto p-5">
+                        <div className="w-full h-full rounded-[16px] overflow-hidden relative">
+                            <img src="/bg-hero4.png" alt="" className="w-full h-full object-cover object-right" />
+                        </div>
+                    </div>
                 </div>
+
                 <div className="relative z-20 mx-auto max-w-6xl px-6 flex flex-col gap-10">
                     {/* Formats */}
                     <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
@@ -536,23 +446,17 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                {/* wave to next (trust top emerald-100/70) */}
-                <div className="pointer-events-none absolute bottom-[-1px] left-0 right-0 z-10 text-emerald-100/70">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
+
             </section>
 
             {/* Trust (Эксперты + Сообщество + Этика) */}
             <section id="trust" className="relative min-h-screen snap-start overflow-hidden flex items-center py-16">
-                <Image src="/bg-section-calm.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-emerald-100/70 via-white/70 to-sky-100/70" data-theme-bg />
-                {/* top wave from previous (emerald-100/70) */}
-                <div className="pointer-events-none absolute top-[-1px] left-0 right-0 z-10 text-emerald-100/70 rotate-180">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
+                <div className="absolute inset-0 z-0 bg-white">
+                    <div className="h-full w-full max-w-[4000px] ml-auto p-5">
+                        <div className="w-full h-full rounded-[16px] overflow-hidden relative">
+                            <img src="/bg-hero6.png" alt="" className="w-full h-full object-cover object-right" />
+                        </div>
+                    </div>
                 </div>
                 <div className="relative z-20 mx-auto max-w-6xl px-6 flex flex-col gap-10">
                     {/* Experts */}
@@ -604,23 +508,16 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                {/* wave to next (join top emerald-100/70) */}
-                <div className="pointer-events-none absolute bottom-[-1px] left-0 right-0 z-10 text-emerald-100/70">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
             </section>
 
             {/* Join (Подписка + FAQ + финальный CTA) */}
             <section id="join" className="relative min-h-screen snap-start overflow-hidden flex items-center justify-center py-16">
-                <Image src="/bg-section-calm.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-emerald-100/70 via-sky-100/70 to-emerald-50/70" data-theme-bg />
-                {/* top wave from previous (emerald-100/70) */}
-                <div className="pointer-events-none absolute top-[-1px] left-0 right-0 z-10 text-emerald-100/70 rotate-180">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
+                <div className="absolute inset-0 z-0 bg-white">
+                    <div className="h-full w-full max-w-[4000px] ml-auto p-5">
+                        <div className="w-full h-full rounded-[16px] overflow-hidden relative">
+                            <img src="/bg-hero7.png" alt="" className="w-full h-full object-cover object-right" />
+                        </div>
+                    </div>
                 </div>
                 <div className="relative z-20 mx-auto max-w-6xl px-6 flex flex-col gap-10">
                     {/* Pricing */}
@@ -695,294 +592,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Formats (legacy) - removed */}
-            {false && (
-            <section id="formats" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <Image src="/bg-section-calm.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-emerald-100/70 via-white/70 to-sky-100/70" data-theme-bg />
-                <div className="relative z-20 mx-auto max-w-6xl px-6">
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Форматы</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Эфиры, курсы, короткие практики и индивидуальные сессии — выбирайте свой ритм.</p>
-                        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                          {[
-                            { title: "Прямые эфиры", desc: "Живое присутствие и поддержка.", color: "from-rose-50 to-white" },
-                            { title: "Курсы", desc: "Глубокие темы по шагам.", color: "from-sky-50 to-white" },
-                            { title: "Практики 5–10 мин", desc: "Когда важна мягкая регулярность.", color: "from-emerald-50 to-white" },
-                            { title: "Инд. сессии", desc: "Лично и конфиденциально.", color: "from-amber-50 to-white" },
-                          ].map((c, i) => (
-                            <div key={i} className={`rounded-2xl p-5 ring-1 ring-black/5 bg-gradient-to-br ${c.color} hover:shadow-md transition-shadow`} style={{ ["--d" as any]: i+1 }}>
-                              <p className="font-medium text-gray-800">{c.title}</p>
-                              <p className="text-sm text-gray-600 mt-1">{c.desc}</p>
-                            </div>
-                          ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
-            )}
-
-            {/* Schedule (legacy) - removed */}
-            {false && (
-            <section id="schedule" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <Image src="/bg-hero-waves.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-white/70 via-sky-100/70 to-emerald-100/70" data-theme-bg />
-                <div className="relative z-20 mx-auto max-w-6xl px-6">
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Ближайшие эфиры</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Присоединяйтесь в один клик — поставьте напоминание и успейте на начало.</p>
-                        <div className="mt-6 grid md:grid-cols-3 gap-4">
-                          {[
-                            { title: "Дыхательная практика", expert: "д-р Муратова", when: "сегодня 19:00" },
-                            { title: "Антитревога", expert: "психолог Исаева", when: "завтра 08:30" },
-                            { title: "Сон и восстановление", expert: "сомнолог Петров", when: "пт 21:00" },
-                          ].map((s, i) => (
-                            <div key={i} className="rounded-2xl p-5 bg-white/70 ring-1 ring-black/5 hover:shadow-md transition-shadow">
-                              <div className="flex items-center justify-between">
-                                <p className="font-medium text-gray-800">{s.title}</p>
-                                <span className="px-2 py-0.5 text-[10px] rounded-full bg-rose-100 text-rose-700">LIVE</span>
-                              </div>
-                              <p className="text-sm text-gray-600 mt-1">{s.expert}</p>
-                              <p className="text-sm text-gray-700 mt-3">{s.when}</p>
-                              <div className="mt-4 flex items-center gap-2">
-                                <a href="#" className="rounded-full bg-teal-600 text-white px-3 py-1 text-sm hover:bg-teal-500 transition-colors">Напомнить</a>
-                                <a href="#" className="rounded-full bg-white/80 px-3 py-1 text-sm text-gray-800 shadow hover:bg-white transition-colors">В расписание</a>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
-            )}
-
-            {/* Experts (legacy) - removed */}
-            {false && (
-            <section id="experts" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <Image src="/bg-section-calm.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-emerald-100/70 via-white/70 to-sky-100/70" data-theme-bg />
-                <div className="relative z-20 mx-auto max-w-6xl px-6">
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Эксперты</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Сертифицированные специалисты с человеческим голосом.</p>
-                        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {[1,2,3,4,5,6].map((i) => (
-                            <div key={i} className="rounded-2xl p-5 bg-white/70 ring-1 ring-black/5 hover:shadow-md transition-shadow">
-                              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-teal-300 to-sky-300" />
-                              <p className="mt-3 font-medium text-gray-800">Эксперт {i}</p>
-                              <p className="text-sm text-gray-600">Психолог, стаж 7+ лет</p>
-                              <div className="mt-3 flex items-center gap-1 text-amber-500">{"★★★★★"}</div>
-                              <div className="mt-3 flex items-center gap-2">
-                                <a href="#" className="rounded-full bg-white/80 px-3 py-1 text-sm text-gray-800 shadow hover:bg-white transition-colors">Профиль</a>
-                                <a href="#" className="rounded-full bg-teal-600 text-white px-3 py-1 text-sm hover:bg-teal-500 transition-colors">Записаться</a>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
-            )}
-
-            {/* Routes (legacy) - removed */}
-            {false && (
-            <section id="routes" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <Image src="/bg-hero-waves.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-white/70 via-sky-100/70 to-emerald-100/70" data-theme-bg />
-                <div className="relative z-20 mx-auto max-w-6xl px-6">
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Маршруты к балансу</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Готовые подборки под ваши задачи: «Спокойный сон», «Антитревога», «Лёгкое утро».</p>
-                        <div className="mt-6 grid md:grid-cols-3 gap-4">
-                          {[
-                            { title: "Спокойный сон за 7 дней", chip: "вечер" },
-                            { title: "Антитревога", chip: "день" },
-                            { title: "Лёгкое утро", chip: "утро" },
-                          ].map((r, i) => (
-                            <div key={i} className="rounded-2xl p-5 bg-white/70 ring-1 ring-black/5 hover:shadow-md transition-shadow">
-                              <div className="flex items-center justify-between">
-                                <p className="font-medium text-gray-800">{r.title}</p>
-                                <span className="px-2 py-0.5 text-[10px] rounded-full bg-amber-100 text-amber-700">{r.chip}</span>
-                              </div>
-                              <div className="mt-3 h-2 rounded-full bg-gray-200 overflow-hidden"><div className="h-full w-1/5 bg-teal-500" /></div>
-                              <div className="mt-4 flex items-center gap-2">
-                                <a href="#" className="rounded-full bg-teal-600 text-white px-3 py-1 text-sm hover:bg-teal-500 transition-colors">Начать маршрут</a>
-                                <a href="#" className="rounded-full bg-white/80 px-3 py-1 text-sm text-gray-800 shadow hover:bg-white transition-colors">Добавить в план</a>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
-            )}
-
-            {/* Community (legacy) - removed */}
-            {false && (
-            <section id="community" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <Image src="/bg-section-calm.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-emerald-100/70 via-white/70 to-sky-100/70" data-theme-bg />
-                <div className="relative z-20 mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-10 items-center">
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Сообщество и отзывы</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Мы разные, но в одной волне. Реальные истории — как ночи стали тише, а утро — светлее.</p>
-                        <div className="mt-6 grid gap-3 text-sm text-gray-700">
-                          <div className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5">«Сон стал глубже уже на 3-й день». — Марина</div>
-                          <div className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5">«Перестал застревать в тревоге, стало легче дышать». — Олег</div>
-                          <div className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5">«Полюбила утренние 7 минут — это мой свет». — Алина</div>
-                        </div>
-                        <div className="mt-6 flex items-center gap-3">
-                          <a href="http://localhost:3001/register" className="rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Присоединиться</a>
-                          <a href="#" className="rounded-full bg-white/80 px-6 py-3 text-sm md:text-base text-gray-800 shadow hover:bg-white transition-colors">Оставить отзыв</a>
-                        </div>
-                    </div>
-                    <div className="relative reveal">
-                        <div data-parallax data-parallax-speed="0.08" className="relative mx-auto w-full max-w-md aspect-square rounded-3xl bg-white/60 backdrop-blur-md shadow-lg overflow-hidden float-soft" />
-                    </div>
-                </div>
-            </section>
-            )}
-
-            {/* Subscription (legacy) - removed */}
-            {false && (
-            <section id="pricing" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <Image src="/bg-hero-waves.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-white/70 via-sky-100/70 to-emerald-100/70" data-theme-bg />
-                {/* top wave from previous (white/70) */}
-                <div className="pointer-events-none absolute top-[-1px] left-0 right-0 z-10 text-white/70 rotate-180">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
-                <div className="relative z-20 mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-10 items-center">
-                    <div className="order-2 md:order-1 reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <div className="flex items-center gap-3 flex-wrap">
-                          <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Подписка без лишнего</h2>
-                          <span className="px-3 py-1 rounded-full text-xs md:text-sm bg-emerald-100 text-emerald-700">Первый эфир — бесплатно</span>
-                        </div>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg" style={{ ["--d" as any]: 1 }}>
-                            Один план — полный доступ к прямым эфирам и библиотеке. Отмена в 1 клик.
-                        </p>
-                        <div className="mt-6 grid gap-3 text-gray-700">
-                            <div className="flex items-center gap-3" style={{ ["--d" as any]: 2 }}><span className="h-6 w-6 rounded-full bg-teal-100 text-teal-600 inline-flex items-center justify-center">✓</span> Прямые эфиры с экспертами</div>
-                            <div className="flex items-center gap-3" style={{ ["--d" as any]: 3 }}><span className="h-6 w-6 rounded-full bg-sky-100 text-sky-600 inline-flex items-center justify-center">✓</span> Библиотека записей</div>
-                            <div className="flex items-center gap-3" style={{ ["--d" as any]: 4 }}><span className="h-6 w-6 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center">✓</span> Личные рекомендации</div>
-                            <div className="flex items-center gap-3" style={{ ["--d" as any]: 5 }}><span className="h-6 w-6 rounded-full bg-teal-100 text-teal-600 inline-flex items-center justify-center">✓</span> Доступ к закрытому сообществу</div>
-                        </div>
-                        <div className="mt-8 flex items-center gap-3">
-                          <a href="http://localhost:3001/register" className="inline-flex rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Оформить подписку</a>
-                          <a href="#schedule" className="inline-flex rounded-full bg-white/80 px-6 py-3 text-sm md:text-base text-gray-800 shadow hover:bg-white transition-colors">Смотреть ближайший эфир</a>
-                        </div>
-                        <p className="mt-3 text-xs text-gray-500">7 дней возврат, если не зайдёт. Без карты на первый эфир.</p>
-                    </div>
-                    <div className="order-1 md:order-2 reveal">
-                        <div data-parallax data-parallax-speed="0.06" className="relative mx-auto w-full max-w-md aspect-[4/3] rounded-3xl bg-white/70 backdrop-blur-md shadow-lg overflow-hidden float-soft">
-                            <Image src="/photo2.png" alt="Команда экспертов" fill className="object-cover" />
-                        </div>
-                    </div>
-                </div>
-                {/* wave to next (cta top emerald-100/70) */}
-                <div className="pointer-events-none absolute bottom-[-1px] left-0 right-0 z-10 text-emerald-100/70">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
-            </section>
-            )}
-
-            {/* Safety & Ethics (legacy) - removed */}
-            {false && (
-            <section id="safety" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <Image src="/bg-section-calm.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-emerald-100/70 via-white/70 to-sky-100/70" data-theme-bg />
-                <div className="relative z-20 mx-auto max-w-6xl px-6">
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Безопасность и этика</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Проверка квалификаций, модерация, правила сообщества. Конфиденциальность и прозрачность — по умолчанию.</p>
-                        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-                          {[
-                            { t: "Сертификация" },
-                            { t: "Модерация" },
-                            { t: "Приватность" },
-                            { t: "Жалоба 1 клик" },
-                          ].map((x, i) => (
-                            <div key={i} className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5 text-sm text-gray-700">{x.t}</div>
-                          ))}
-                        </div>
-                    </div>
-                </div>
-            </section>
-            )}
-
-            {/* FAQ (legacy) - removed */}
-            {false && (
-            <section id="faq" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <Image src="/bg-hero-waves.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-white/70 via-sky-100/70 to-emerald-100/70" data-theme-bg />
-                <div className="relative z-20 mx-auto max-w-6xl px-6">
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">FAQ</h2>
-                        <div className="mt-6 grid md:grid-cols-2 gap-4 text-gray-700 text-sm">
-                          {[
-                            { q: "Как проходят эфиры?", a: "В лайв-формате с чатом, записи сохраняются." },
-                            { q: "Будут ли записи?", a: "Да, в библиотеке доступны в любое время." },
-                            { q: "Нужно ли оборудование?", a: "Нет, достаточно телефона или ноутбука." },
-                            { q: "Как отменить подписку?", a: "В 1 клик в профиле, без вопросов." },
-                            { q: "Есть ли бесплатный доступ?", a: "Первый эфир бесплатен, без карты." },
-                            { q: "Какой уровень подготовки нужен?", a: "Подходит для любого уровня, темп — ваш." },
-                          ].map((f, i) => (
-                            <details key={i} className="rounded-xl bg-white/70 ring-1 ring-black/5 p-4">
-                              <summary className="cursor-pointer font-medium text-gray-800">{f.q}</summary>
-                              <p className="mt-2 text-gray-600">{f.a}</p>
-                            </details>
-                          ))}
-                        </div>
-                        <div className="mt-6">
-                          <a href="#" className="rounded-full bg-white/80 px-6 py-3 text-sm md:text-base text-gray-800 shadow hover:bg-white transition-colors">Задать вопрос в чат</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            )}
-
-            {/* CTA (legacy) - removed, use join */}
-            {false && (
-            <section id="cta" className="relative h-screen snap-start overflow-hidden flex items-center justify-center">
-                <Image src="/bg-section-calm.svg" alt="" fill className="object-cover opacity-60 pointer-events-none select-none z-0" />
-                <div className="absolute inset-0 z-0 bg-gradient-to-b from-emerald-100/70 via-sky-100/70 to-emerald-50/70" data-theme-bg />
-                {/* top wave from previous (emerald-100/70) */}
-                <div className="pointer-events-none absolute top-[-1px] left-0 right-0 z-10 text-emerald-100/70 rotate-180">
-                  <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="block w-full h-[70px] md:h-[100px]">
-                    <path fill="currentColor" d="M0,0 C180,60 360,0 540,40 C720,80 900,0 1080,50 C1260,100 1440,40 1440,40 L1440,120 L0,120 Z" />
-                  </svg>
-                </div>
-                <div className="relative z-20 text-center px-6 max-w-2xl reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 py-8">
-                    <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Будьте в балансе каждый день</h2>
-                    <p className="mt-4 text-gray-600 text-base md:text-lg" style={{ ["--d" as any]: 1 }}>Присоединяйтесь к сообществу, где ценят осознанность, движение и поддержку.</p>
-                    <div className="mt-8 flex items-center justify-center gap-4">
-                        <a href="http://localhost:3001/register" className="rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors" style={{ ["--d" as any]: 2 }}>Присоединиться</a>
-                        <a href="http://localhost:3001/login" className="rounded-full bg-white/80 px-6 py-3 text-sm md:text-base text-gray-800 shadow hover:bg-white transition-colors" style={{ ["--d" as any]: 3 }}>У меня есть аккаунт</a>
-                    </div>
-                    <p className="mt-3 text-xs text-gray-500">Первый эфир — бесплатно. Без карты.</p>
-                </div>
-                {/* Footer from layout moved here to be visible within last full-screen section */}
-                <footer className="absolute bottom-0 left-0 right-0 z-20 border-t border-gray-200/70 bg-white/70 backdrop-blur text-gray-700 text-sm">
-                  <div className="mx-auto max-w-6xl px-6 py-4 md:py-6 flex flex-col items-center gap-3 text-center">
-                    <div className="flex items-center gap-3 whitespace-nowrap">
-                      <img src="/logo-sunset.svg" alt="GARmonia" className="h-5 w-5" />
-                      <span className="font-medium">GARmonia</span>
-                      <span>© {new Date().getFullYear()} GARmonia. Все права защищены.</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <a href="#benefits" className="hover:text-gray-900 transition-colors">Преимущества</a>
-                      <a href="#pricing" className="hover:text-gray-900 transition-colors">Подписка</a>
-                      <a href="#cta" className="hover:text-gray-900 transition-colors">Контакты</a>
-                    </div>
-                  </div>
-                </footer>
-            </section>
-            )}
-
             {/* Animations CSS */}
             <style jsx global>{`
               .reveal { opacity: 0; transform: translateY(16px) scale(0.98); transition: opacity .8s ease, transform .8s ease; }
@@ -1022,8 +631,6 @@ export default function Home() {
               /* Glass */
               .glass { background: rgba(255,255,255,.60); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,.05); }
               body[data-theme="dark"] .glass { background: rgba(2,6,23,.40); border-color: rgba(255,255,255,.06); }
-              /* Neon line */
-              .neon-line { background: linear-gradient(90deg, rgba(13,148,136,0), rgba(13,148,136,.8), rgba(56,189,248,.8), rgba(13,148,136,0)); box-shadow: 0 0 10px rgba(56,189,248,.35); }
               /* Brand accent for GAR */
               .brand-accent { background: linear-gradient(180deg, #000, #14b8a6); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 6px 16px rgba(56,189,248,.15)); }
               /* Live equalizer */

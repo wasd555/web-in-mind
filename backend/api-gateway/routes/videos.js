@@ -6,9 +6,26 @@ const path = require("path");
 const router = express.Router();
 
 
-// const uploadsPath = path.join(__dirname, "../../shared-uploads");
-const uploadsPath = path.join("/app/uploads");
-console.log("Проверяем uploadsPath:", uploadsPath);
+// Определяем uploadsPath: приоритет ENV, затем контейнерный путь, затем локальный shared-uploads
+const resolveUploadsPath = () => {
+    const envPath = process.env.UPLOADS_PATH && process.env.UPLOADS_PATH.trim();
+    if (envPath && fs.existsSync(envPath)) return envPath;
+
+    const containerPath = "/app/uploads";
+    if (fs.existsSync(containerPath)) return containerPath;
+
+    const localPath = path.join(__dirname, "../../shared-uploads");
+    if (fs.existsSync(localPath)) return localPath;
+
+    // Последняя попытка: корень репо (dev-режим вне контейнера)
+    const repoRootLocal = path.join(process.cwd(), "../shared-uploads");
+    if (fs.existsSync(repoRootLocal)) return repoRootLocal;
+
+    return localPath; // по умолчанию
+};
+
+const uploadsPath = resolveUploadsPath();
+console.log("[videos] uploadsPath=", uploadsPath);
 // Получение списка видео
 router.get("/", (req, res) => {
     if (!fs.existsSync(uploadsPath)) {
@@ -37,12 +54,21 @@ router.get("/", (req, res) => {
 });
 
 // Раздача HLS файлов
-router.get("/:video/:file", (req, res) => {
-    const { video, file } = req.params;
-    const filePath = path.join(uploadsPath, video, file);
+// Раздаём как плейлисты, так и сегменты, включая вложенные пути (например, segments/1080p_0001.ts)
+router.get("/:video/*", (req, res) => {
+    const { video } = req.params;
+    const restPath = req.params[0] || ""; // master.m3u8, 720p.m3u8 или segments/part.ts
+    const filePath = path.join(uploadsPath, video, restPath);
 
     if (!fs.existsSync(filePath)) {
         return res.status(404).send("Файл не найден");
+    }
+
+    const ext = path.extname(filePath).toLowerCase();
+    if (ext === ".m3u8") {
+        res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
+    } else if (ext === ".ts") {
+        res.setHeader("Content-Type", "video/mp2t");
     }
 
     res.sendFile(filePath);

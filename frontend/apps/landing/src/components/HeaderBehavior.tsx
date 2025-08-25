@@ -4,15 +4,14 @@ import { useEffect } from "react";
 
 export default function HeaderBehavior() {
   useEffect(() => {
-    // Active link highlight
+    // Active link highlight (match hover effect)
     const ids = ["hero","benefits","about","offerings","trust","join"];
     const nav = document.querySelector('[data-nav]');
     if (nav) {
       const links = Array.from(nav.querySelectorAll('a[data-id]')) as HTMLAnchorElement[];
       const byId = new Map(links.map(a => [a.getAttribute('data-id')!, a]));
-      const activeClass = 'bg-gradient-to-r from-sky-500 to-teal-600 text-white shadow-sm';
-      const clear = ()=> links.forEach(a => a.classList.remove(...activeClass.split(' ')));
-      const on = (id:string)=>{ clear(); const a = byId.get(id); if(a){ a.classList.add(...activeClass.split(' ')); }};
+      const clear = ()=> links.forEach(a => a.classList.remove('active-underline'));
+      const on = (id:string)=>{ clear(); const a = byId.get(id); if(a){ a.classList.add('active-underline'); }};
       const sections = ids.map(id => document.getElementById(id)).filter(Boolean) as Element[];
       const io = new IntersectionObserver((entries)=>{
         const visible = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio - a.intersectionRatio);

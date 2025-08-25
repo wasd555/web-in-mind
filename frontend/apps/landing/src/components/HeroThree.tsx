@@ -22,7 +22,7 @@ export default function HeroThree() {
     const light = new THREE.HemisphereLight(0x7dd3fc, 0x86efac, 0.45);
     scene.add(light);
 
-    const particleCount = 240;
+    const particleCount = 10;
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
     const sizes = new Float32Array(particleCount);
