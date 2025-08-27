@@ -6,6 +6,7 @@ import "./globals.css";
 import ThemeToggle from "../src/components/ThemeToggle";
 import MobileNav from "../src/components/MobileNav";
 import HeaderBehavior from "../src/components/HeaderBehavior";
+import Footer from "../src/components/Footer";
 
 
 const geistSans = localFont({
@@ -34,7 +35,7 @@ export default function RootLayout({
   // Runs on client via inline script tag at the end of header
   return (
     <html lang="ru">
-      <body className={`min-h-screen overflow-hidden bg-[#f1f5f9] text-gray-900 ${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${manrope.variable}`} style={{ fontFamily: 'var(--font-ui), var(--default-font-family, ui-sans-serif, system-ui, sans-serif)' }}>
+      <body className={`min-h-screen overflow-hidden bg-[#fff] text-gray-900 ${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${manrope.variable}`} style={{ fontFamily: 'var(--font-ui), var(--default-font-family, ui-sans-serif, system-ui, sans-serif)' }}>
         <header className="fixed top-0 left-0 w-full z-50">
           <div className="mx-auto max-w-7xl">
             <div data-header-card className="neoglass m-0 rounded-b-2xl px-4 py-4 flex items-center gap-3 transition-all duration-300">
@@ -75,6 +76,7 @@ export default function RootLayout({
             <GlobalThree />
           </div>
           {children}
+          <Footer />
         </main>
       </body>
     </html>

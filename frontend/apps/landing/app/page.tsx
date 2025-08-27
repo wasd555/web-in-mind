@@ -3,6 +3,9 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ScrollEffects from "../src/components/ScrollEffects";
+import Section from "../src/components/Section";
+import BentoGrid from "../src/components/BentoGrid";
+import { BentoCard } from "../src/components/BentoCard";
 
 function useRevealOnScroll(className: string = "reveal") {
     useEffect(() => {
@@ -231,223 +234,162 @@ export default function Home() {
                 
             </section>
 
-            {/* Benefits */}
-            <section id="benefits" className="relative h-screen snap-start overflow-hidden flex items-center">
-                <div className="absolute inset-0 z-0 bg-white">
+            {/* Benefits (Bento) */}
+            <Section id="benefits" title="ПОЧЕМУ GARMONIA" subtitle="Мы объединяем практики психологии, медицины и движения. Эфиры, курсы и видео — всё в одном месте, чтобы поддержать ваш баланс.">
+              <BentoGrid cols={{ base: 1, sm: 1, md: 2, lg: 2, xl: 4}}>
+                <BentoCard
+                  fullRow
+                  title="Живые эфиры и практики"
+                  subtitle="Присоединяйтесь к трансляциям с экспертами и участвуйте в интерактивных сессиях."
+                  variant="text"
+                  clampLines={4}
+                  backgroundColorClassName="bg-[linear-gradient(to_top_left,#98C2CA_50%,#d8d8d8_50%)]"
+                >
+                  <ul className="grid gap-2 text-sm md:text-base py-5 lg:text-[17px] leading-relaxed list-disc pl-5">
+                    <li>Индивидуальные рекомендации</li>
+                    <li>Напоминания о лайвах</li>
+                    <li>Доступ с любого устройства</li>
+                    <li>Поддержка 24/7</li>
+                  </ul>
+                </BentoCard>
 
-                </div>
-                
-                <div className="relative z-20 mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-10 items-center">
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Почему GARmonia</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg" style={{ ["--d" as any]: 1 }}>
-                            Мы объединяем практики психологии, медицины и движения. Прямые эфиры, курсы и библиотека видео — всё в одном месте, чтобы поддержать ваше внутреннее равновесие.
-                        </p>
-                        <ul className="mt-6 grid gap-4">
-                            <li className="flex items-start gap-3" style={{ ["--d" as any]: 2 }}>
-                                <span className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-full bg-teal-50">
-                                    <Image src="/icon-meditation.svg" alt="Медитации" width={28} height={28} />
-                                </span>
-                                <div>
-                                    <p className="font-medium text-gray-800">Живые эфиры и практики</p>
-                                    <p className="text-gray-600 text-sm">Присоединяйтесь к трансляциям с экспертами и участвуйте в интерактивных сессиях.</p>
-                                </div>
-                            </li>
-                            <li className="flex items-start gap-3" style={{ ["--d" as any]: 3 }}>
-                                <span className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-full bg-sky-50">
-                                    <Image src="/icon-video.svg" alt="Видео" width={28} height={28} />
-                                </span>
-                                <div>
-                                    <p className="font-medium text-gray-800">Библиотека видео</p>
-                                    <p className="text-gray-600 text-sm">Смотрите записи вебинаров и курсы в удобном темпе, с любого устройства.</p>
-                                </div>
-                            </li>
-                            <li className="flex items-start gap-3" style={{ ["--d" as any]: 4 }}>
-                                <span className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50">
-                                    <Image src="/icon-heart.svg" alt="Поддержка" width={28} height={28} />
-                                </span>
-                                <div>
-                                    <p className="font-medium text-gray-800">Забота о себе</p>
-                                    <p className="text-gray-600 text-sm">Медитации, дыхательные практики, психообразование — всё для вашего благополучия.</p>
-                                </div>
-                            </li>
-                        </ul>
-                        <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-gray-700">
-                            <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-teal-500" /> Индивидуальные рекомендации</div>
-                            <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-sky-500" /> Напоминания о лайвах</div>
-                            <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-500" /> Доступ с любого устройства</div>
-                            <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-teal-500" /> Поддержка 24/7</div>
-                        </div>
-                    </div>
-                    <div className="relative reveal">
-                        <div data-parallax data-parallax-speed="-0.08" className="relative mx-auto w-full max-w-md aspect-square rounded-3xl bg-white/60 backdrop-blur-md shadow-lg overflow-hidden float-soft">
-                            <Image src="/photo1.png" alt="Пользователь на практике" fill className="object-cover" />
-                        </div>
-                    </div>
-                </div>
-                
-            </section>
+                <BentoCard
+                  variant="media"
+                  backgroundImageSrc="/photo1.png"
+                />
 
-            {/* About (merged with Discover) */}
-            <section id="about" className="relative min-h-screen snap-start overflow-hidden flex items-center py-16">
-                <div className="absolute inset-0 z-0 bg-white">
-                    <div className="h-full w-full max-w-[4000px] ml-auto p-5">
-                        <div className="w-full h-full rounded-[16px] overflow-hidden relative">
-                            <img src="/bg-hero5.png" alt="" className="w-full h-full object-cover object-right" />
-                        </div>
+                {[{
+                  title: 'Библиотека видео',
+                  desc: 'Смотрите записи вебинаров и курсы в удобном темпе.',
+                  icon: '/icon-video.svg',
+                }, {
+                  title: 'Забота о себе',
+                  desc: 'Медитации, дыхание, психообразование — мягко и регулярно.',
+                  icon: '/icon-heart.svg',
+                }, {
+                  title: 'Медитации',
+                  desc: 'Короткие практики на каждый день.',
+                  icon: '/icon-meditation.svg',
+                }].map((c, i) => (
+                  <BentoCard backgroundColorClassName="bg-gray-200" key={i} title={c.title} subtitle={c.desc} variant="text" colSpan={{ base: 4, md: 4, lg: 4, xl: 4 }} clampLines={3}>
+                    <div className="h-12 w-12 rounded-2xl bg-white/60 ring-1 ring-black/5 flex items-center justify-center">
+                      <Image src={c.icon} alt="" width={28} height={28} />
                     </div>
-                </div>
-                
-                <div className="relative z-20 mx-auto max-w-6xl px-6 flex flex-col gap-10">
-                    {/* About block */}
-                    <div className="grid md:grid-cols-2 gap-10 items-center">
-                        <div className="order-2 md:order-1 reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                            <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">О GARmonia</h2>
-                            <p className="mt-4 text-gray-600 text-base md:text-lg">Мы соединяем научный подход и человеческое тепло. Эфиры, курсы, библиотека и сообщество — всё, чтобы мягко возвращать себя к балансу.</p>
-                            <div className="mt-6 grid grid-cols-2 gap-3 text-sm text-gray-700">
-                              <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-sky-500" /> Научная база</div>
-                              <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-500" /> Бережная модерация</div>
-                              <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-amber-500" /> Прозрачность</div>
-                              <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-teal-500" /> Приватность</div>
-                            </div>
-                        </div>
-                        <div className="order-1 md:order-2 reveal">
-                            <div data-parallax data-parallax-speed="-0.06" className="relative mx-auto w-full max-w-md aspect-square rounded-3xl bg-white/70 backdrop-blur-md shadow-lg overflow-hidden float-soft">
-                                <Image src="/photo1.png" alt="О платформе" fill className="object-cover" />
-                            </div>
-                        </div>
-                    </div>
-                    {/* Discover block (merged) */}
-                    <div className="grid md:grid-cols-2 gap-10 items-center">
-                        <div className="reveal rounded-3xl bg-white/60 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                            <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">60 секунд к личному маршруту</h2>
-                            <p className="mt-4 text-gray-600 text-base md:text-lg" style={{ ["--d" as any]: 1 }}>
-                                Короткая диагностика подскажет, с чего начать — дыхание, сон, тревога, энергия. Без регистрации, бережно, с рекомендациями на ваш темп.
-                            </p>
-                            <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                                {[
-                                  { label: "Тревога", color: "bg-teal-50 text-teal-700" },
-                                  { label: "Сон", color: "bg-sky-50 text-sky-700" },
-                                  { label: "Энергия", color: "bg-emerald-50 text-emerald-700" },
-                                  { label: "Отношения", color: "bg-amber-50 text-amber-700" },
-                                ].map((chip, i) => (
-                                  <div key={i} className={`px-3 py-2 rounded-full text-center ${chip.color}`} style={{ ["--d" as any]: i+2 }}>{chip.label}</div>
-                                ))}
-                            </div>
-                            <a href="#offerings" className="mt-8 inline-flex rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Пройти диагностику</a>
-                        </div>
-                        <div className="reveal order-first md:order-none">
-                            <div data-parallax data-parallax-speed="0.06" className="relative mx-auto w-full max-w-md aspect-[4/3] rounded-3xl bg-white/70 backdrop-blur-md shadow-lg overflow-hidden float-soft">
-                                <Image src="/live-mock-upload.png" alt="Mock" fill className="object-cover opacity-30" />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="rounded-2xl bg-white/80 px-4 py-3 text-gray-800 text-center shadow">
-                                    <p className="text-sm">3 вопроса</p>
-                                    <div className="mt-2 h-2 w-48 rounded-full bg-gray-200 overflow-hidden"><div className="h-full w-1/3 bg-teal-500" /></div>
-                                  </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                  </BentoCard>
+                ))}
+              </BentoGrid>
+            </Section>
 
-            {/* Offerings (Форматы + Маршруты + Эфиры) */}
-            <section id="offerings" className="relative min-h-screen snap-start overflow-hidden flex items-center py-16">
-                <div className="absolute inset-0 z-0 bg-white">
-                    <div className="h-full w-full max-w-[4000px] ml-auto p-5">
-                        <div className="w-full h-full rounded-[16px] overflow-hidden relative">
-                            <img src="/bg-hero4.png" alt="" className="w-full h-full object-cover object-right" />
-                        </div>
-                    </div>
-                </div>
+            {/* About (Bento) */}
+            <Section id="about" title="О GARMONIA" subtitle="Научный подход и человеческое тепло. Эфиры, курсы, библиотека и сообщество — мягко возвращают к балансу.">
+              <BentoGrid>
+                <BentoCard
+                  title="О платформе"
+                  backgroundColorClassName="bg-gray-50"
+                  subtitle="Прозрачность, приватность и бережная модерация"
+                  variant="text"
+                  colSpan={{ base: 4, md: 4, lg: 6, xl: 8 }}
+                  clampLines={4}
+                >
+                  <div className="grid grid-cols-2 gap-2 text-sm md:text-base lg:text-[17px] leading-relaxed">
+                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-sky-500" /> Научная база</div>
+                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-500" /> Бережная модерация</div>
+                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-amber-500" /> Прозрачность</div>
+                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-teal-500" /> Приватность</div>
+                  </div>
+                </BentoCard>
 
-                <div className="relative z-20 mx-auto max-w-6xl px-6 flex flex-col gap-10">
-                    {/* Formats */}
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Форматы</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Эфиры, курсы, короткие практики и индивидуальные сессии — выбирайте свой ритм.</p>
-                        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                          {[
-                            { title: "Прямые эфиры", desc: "Живое присутствие и поддержка.", color: "from-rose-50 to-white" },
-                            { title: "Курсы", desc: "Глубокие темы по шагам.", color: "from-sky-50 to-white" },
-                            { title: "Практики 5–10 мин", desc: "Когда важна мягкая регулярность.", color: "from-emerald-50 to-white" },
-                            { title: "Инд. сессии", desc: "Лично и конфиденциально.", color: "from-amber-50 to-white" },
-                          ].map((c, i) => (
-                            <div key={i} onMouseEnter={() => playChime(i)} className={`rounded-2xl p-5 ring-1 ring-black/5 bg-gradient-to-br ${c.color} hover:shadow-md transition-shadow`}>
-                              <p className="font-medium text-gray-800">{c.title}</p>
-                              <p className="text-sm text-gray-600 mt-1">{c.desc}</p>
-                            </div>
-                          ))}
-                        </div>
-                    </div>
-                    {/* Routes */}
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h3 className="text-2xl md:text-4xl font-semibold text-gray-800">Маршруты к балансу</h3>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Готовые подборки под ваши задачи: «Спокойный сон», «Антитревога», «Лёгкое утро».</p>
-                        <div className="mt-6 grid md:grid-cols-3 gap-4">
-                          {[
-                            { title: "Спокойный сон за 7 дней", chip: "вечер" },
-                            { title: "Антитревога", chip: "день" },
-                            { title: "Лёгкое утро", chip: "утро" },
-                          ].map((r, i) => (
-                            <div key={i} onMouseEnter={() => playChime(i+1)} className="rounded-2xl p-5 bg-white/70 ring-1 ring-black/5 hover:shadow-md transition-shadow">
-                              <div className="flex items-center justify-between">
-                                <p className="font-medium text-gray-800">{r.title}</p>
-                                <span className="px-2 py-0.5 text-[10px] rounded-full bg-amber-100 text-amber-700">{r.chip}</span>
-                              </div>
-                              <div className="mt-3 h-2 rounded-full bg-gray-200 overflow-hidden"><div className="h-full w-1/5 bg-teal-500" /></div>
-                              <div className="mt-4 flex items-center gap-2">
-                                <a href="#" className="rounded-full bg-teal-600 text-white px-3 py-1 text-sm hover:bg-teal-500 transition-colors">Начать маршрут</a>
-                                <a href="#" className="rounded-full bg-white/80 px-3 py-1 text-sm text-gray-800 shadow hover:bg-white transition-colors">Добавить в план</a>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                    </div>
-                    {/* Mini Dashboard: Ваш ритм */}
-                    <div className="reveal rounded-3xl bg-white/60 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <div className="flex items-center gap-3 flex-wrap">
-                          <h3 className="text-2xl md:text-4xl font-semibold text-gray-800">Ваш ритм</h3>
-                          <span className="px-3 py-1 rounded-full text-xs md:text-sm bg-sky-100 text-sky-700">серия {streak} дн.</span>
-                        </div>
-                        <p className="mt-3 text-gray-600 text-base md:text-lg">Мягкий прогресс без спешки. Сегодня вы на {Math.round(dayProgress*100)}% ближе к балансу.</p>
-                        <div className="mt-5 h-3 w-full rounded-full bg-gray-200 overflow-hidden">
-                          <div className="h-full bg-gradient-to-r from-teal-500 to-sky-500" style={{ width: `${Math.max(0, Math.min(100, dayProgress*100))}%` }} />
-                        </div>
-                        <div className="mt-4 text-sm text-gray-700 flex items-center gap-3 flex-wrap">
-                          <span className="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700">Совет дня: 2 цикла дыхания 4–7–8</span>
-                          <a href="#" className="rounded-full bg-teал-600 text-white px-3 py-1.5 text-sm hover:bg-teal-500 transition-colors">Добавить напоминание</a>
-                          <a href="#" className="rounded-full bg-white/80 px-3 py-1.5 text-sm text-gray-800 shadow hover:bg-white transition-colors">Открыть дашборд</a>
-                        </div>
-                    </div>
-                    {/* Schedule */}
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h3 className="text-2xl md:text-4xl font-semibold text-gray-800">Ближайшие эфиры</h3>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Присоединяйтесь в один клик — поставьте напоминание и успейте на начало.</p>
-                        <div className="mt-6 grid md:grid-cols-3 gap-4">
-                          {[
-                            { title: "Дыхательная практика", expert: "д-р Муратова", when: "сегодня 19:00" },
-                            { title: "Антитревога", expert: "психолог Исаева", when: "завтра 08:30" },
-                            { title: "Сон и восстановление", expert: "сомнолог Петров", when: "пт 21:00" },
-                          ].map((s, i) => (
-                            <div key={i} className="rounded-2xl p-5 bg-white/70 ring-1 ring-black/5 hover:shadow-md transition-shadow">
-                              <div className="flex items-center justify-between">
-                                <p className="font-medium text-gray-800">{s.title}</p>
-                                <span className="px-2 py-0.5 text-[10px] rounded-full bg-rose-100 text-rose-700">LIVE</span>
-                              </div>
-                              <p className="text-sm text-gray-600 mt-1">{s.expert}</p>
-                              <p className="text-sm text-gray-700 mt-3">{s.when}</p>
-                              <div className="mt-4 flex items-center gap-2">
-                                <a href="#" className="rounded-full bg-teal-600 text-white px-3 py-1 text-sm hover:bg-teal-500 transition-colors">Напомнить</a>
-                                <a href="#" className="rounded-full bg-white/80 px-3 py-1 text-sm text-gray-800 shadow hover:bg-white transition-colors">В расписание</a>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                    </div>
-                </div>
+                <BentoCard
+                  backgroundImageSrc="/bg-hero3.png"
+                  backgroundImageAlt="О платформе"
+                  backgroundImageSizes="(min-width:768px) 40vw, 100vw"
+                  backgroundImageClassName="object-cover"
+                  variant="media"
+                  colSpan={{ base: 4, md: 4, lg: 3, xl: 4 }}
+                />
 
-            </section>
+                <BentoCard
+                  title="60 секунд к личному маршруту"
+                  subtitle="Короткая диагностика подскажет, с чего начать — дыхание, сон, тревога, энергия."
+                  variant="text"
+                  colSpan={{ base: 4, md: 4, lg: 3, xl: 6 }}
+                  href="#offerings"
+                  cta="Пройти диагностику"
+                  clampLines={4}
+                  media={(
+                    <Image src="/photo1.png" alt="О платформе" fill loading="lazy" sizes="(min-width:768px) 40vw, 100vw" className="object-cover" />
+                  )}
+                >
+                  <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                    {["Тревога","Сон","Энергия","Отношения"].map((label, i) => (
+                      <div key={i} className="px-3 py-2 rounded-full bg-white/70 ring-1 ring-black/5 text-center whitespace-nowrap">{label}</div>
+                    ))}
+                  </div>
+                </BentoCard>
+
+                <BentoCard
+                  media={(
+                    <Image src="/live-mock-upload.png" alt="Диагностика" fill loading="lazy" sizes="(min-width:1280px) 33vw, (min-width:768px) 50vw, 100vw" className="object-cover opacity-30" />
+                  )}
+                  variant="media"
+                  colSpan={{ base: 4, md: 4, lg: 4, xl: 6 }}
+                />
+              </BentoGrid>
+            </Section>
+
+            {/* Offerings (Bento) */}
+            <Section 
+                backgroundImageSrc="/bg-hero5.png"
+                id="offerings" title="Возможности" subtitle="Эфиры, курсы, короткие практики и индивидуальные сессии — выбирайте свой ритм.">
+              <BentoGrid cols={{ base: 1, sm: 1, md: 2, xl: 4}}>
+                {["Прямые эфиры","Курсы","Практики 5–10 мин","Инд. сессии"].map((t, i) => (
+                  <BentoCard key={t} title={t} subtitle={i===0?"Живое присутствие и поддержка.":i===1?"Глубокие темы по шагам.":i===2?"Мягкая регулярность.":i===3?"Лично и конфиденциально.":""} variant="text" colSpan={{ base: 4, md: 2, lg: 4 }} clampLines={3}>
+                    <button onMouseEnter={() => playChime(i)} className="rounded-xl bg-white/70 ring-1 ring-black/5 px-3 py-2 text-sm whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Попробовать</button>
+                  </BentoCard>
+                ))}
+
+                <BentoCard fullRow title="Маршруты к балансу" subtitle="Готовые подборки: «Спокойный сон», «Антитревога», «Лёгкое утро»." variant="text" colSpan={{ base: 1}} clampLines={3}>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    {[{title: "Спокойный сон за 7 дней", chip: "вечер"}, {title: "Антитревога", chip: "день"}, {title: "Лёгкое утро", chip: "утро"}].map((r, i) => (
+                      <div key={i} className="rounded-2xl p-5 bg-white/70 ring-1 ring-black/5">
+                        <div className="flex items-center justify-between">
+                          <p className="font-medium text-gray-800 line-clamp-2">{r.title}</p>
+                          <span className="px-2 py-0.5 text-[10px] rounded-full bg-amber-100 text-amber-700 whitespace-nowrap">{r.chip}</span>
+                        </div>
+                        <div className="mt-3 h-2 rounded-full bg-gray-200 overflow-hidden"><div className="h-full w-1/5 bg-teal-500" /></div>
+                        <div className="mt-4 flex items-center gap-2 overflow-x-auto">
+                          <a href="#" className="rounded-full bg-teal-600 text-white px-3 py-1 text-sm whitespace-nowrap">Начать</a>
+                          <a href="#" className="rounded-full bg-white/80 px-3 py-1 text-sm text-gray-800 shadow whitespace-nowrap">В план</a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </BentoCard>
+
+                <BentoCard fullRow title="Ваш ритм" subtitle={`Серия ${streak} дн.`} variant="text" colSpan={{ base: 4, md: 8, lg: 3, xl: 4 }} className="min-h-[300px]" clampLines={2}>
+                  <p className="text-gray-600">Сегодня вы на {Math.round(dayProgress*100)}% ближе к балансу.</p>
+                  <div className="mt-4 h-3 w-full rounded-full bg-gray-200 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-teal-500 to-sky-500" style={{ width: `${Math.max(0, Math.min(100, dayProgress*100))}%` }} />
+                  </div>
+                  <div className="mt-4 text-sm text-gray-700 flex items-center gap-3">
+                    <span className="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 whitespace-nowrap">Совет дня: 2 цикла дыхания 4–7–8</span>
+                    <a href="#" className="rounded-full bg-white/80 px-3 py-1.5 text-sm text-gray-800 shadow whitespace-nowrap">Открыть дашборд</a>
+                  </div>
+                </BentoCard>
+
+                {[{ title: "Дыхательная практика", expert: "д-р Муратова", when: "сегодня 19:00" },{ title: "Антитревога", expert: "психолог Исаева", when: "завтра 08:30" },{ title: "Сон и восстановление", expert: "сомнолог Петров", when: "пт 21:00" }].map((s, i) => (
+                  <BentoCard key={i} title={s.title} subtitle={`${s.expert} • ${s.when}`} variant="text" colSpan={{ base: 4, md: 4, lg: 3, xl: 4 }} ariaLabel={`Эфир: ${s.title}`} clampLines={2}>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 whitespace-nowrap">LIVE</span>
+                      <div className="flex items-center gap-2 overflow-x-auto">
+                        <a href="#" className="rounded-full bg-teal-600 text-white px-3 py-1 whitespace-nowrap">Напомнить</a>
+                        <a href="#" className="rounded-full bg-white/80 px-3 py-1 text-gray-800 shadow whitespace-nowrap">В расписание</a>
+                      </div>
+                    </div>
+                  </BentoCard>
+                ))}
+              </BentoGrid>
+            </Section>
 
             {/* Trust (Эксперты + Сообщество + Этика) */}
             <section id="trust" className="relative min-h-screen snap-start overflow-hidden flex items-center py-16">
@@ -494,7 +436,7 @@ export default function Home() {
                     </div>
                     {/* Safety */}
                     <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h3 className="text-2xl md:text-4xl font-semibold text-gray-800">Безопасность и этика</h3>
+                        <h3 className="text-2xl md:text-4xl font-semibold text-gray-800">Безопасность</h3>
                         <p className="mt-4 text-gray-600 text-base md:text-lg">Проверка квалификаций, модерация, правила сообщества. Конфиденциальность и прозрачность — по умолчанию.</p>
                         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
                           {[
@@ -510,87 +452,58 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Join (Подписка + FAQ + финальный CTA) */}
-            <section id="join" className="relative min-h-screen snap-start overflow-hidden flex items-center justify-center py-16">
-                <div className="absolute inset-0 z-0 bg-white">
-                    <div className="h-full w-full max-w-[4000px] ml-auto p-5">
-                        <div className="w-full h-full rounded-[16px] overflow-hidden relative">
-                            <img src="/bg-hero7.png" alt="" className="w-full h-full object-cover object-right" />
-                        </div>
-                    </div>
-                </div>
-                <div className="relative z-20 mx-auto max-w-6xl px-6 flex flex-col gap-10">
-                    {/* Pricing */}
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8 grid md:grid-cols-2 gap-8 items-center">
-                        <div>
-                            <div className="flex items-center gap-3 flex-wrap">
-                              <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Подписка без лишнего</h2>
-                              <span className="px-3 py-1 rounded-full text-xs md:text-sm bg-emerald-100 text-emerald-700">Первый эфир — бесплатно</span>
-                            </div>
-                            <p className="mt-4 text-gray-600 text-base md:text-lg">Один план — полный доступ к прямым эфирам и библиотеке. Отмена в 1 клик.</p>
-                            <div className="mt-6 grid gap-3 text-gray-700">
-                                <div className="flex items-center gap-3"><span className="h-6 w-6 rounded-full bg-teal-100 text-teal-600 inline-flex items-center justify-center">✓</span> Прямые эфиры с экспертами</div>
-                                <div className="flex items-center gap-3"><span className="h-6 w-6 rounded-full bg-sky-100 text-sky-600 inline-flex items-center justify-center">✓</span> Библиотека записей</div>
-                                <div className="flex items-center gap-3"><span className="h-6 w-6 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center">✓</span> Личные рекомендации</div>
-                                <div className="flex items-center gap-3"><span className="h-6 w-6 rounded-full bg-teal-100 text-teal-600 inline-flex items-center justify-center">✓</span> Доступ к закрытому сообществу</div>
-                            </div>
-                            <div className="mt-8 flex items-center gap-3">
-                              <a href="http://localhost:3001/register" className="inline-flex rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Оформить подписку</a>
-                              <a href="#offerings" className="inline-flex rounded-full bg-white/80 px-6 py-3 text-sm md:text-base text-gray-800 shadow hover:bg-white transition-colors">Смотреть ближайший эфир</a>
-                            </div>
-                            <p className="mt-3 text-xs text-gray-500">7 дней возврат, если не зайдёт. Без карты на первый эфир.</p>
-                        </div>
-                        <div>
-                            <div data-parallax data-parallax-speed="0.06" className="relative mx-auto w-full max-w-md aspect-[4/3] rounded-3xl bg-white/70 backdrop-blur-md shadow-lg overflow-hidden float-soft">
-                                <Image src="/photo2.png" alt="Команда экспертов" fill className="object-cover" />
-                            </div>
-                        </div>
-                    </div>
-                    {/* FAQ */}
-                    <div className="reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 p-6 md:p-8">
-                        <h3 className="text-2xl md:text-4xl font-semibold text-gray-800">FAQ</h3>
-                        <div className="mt-6 grid md:grid-cols-2 gap-4 text-gray-700 text-sm">
-                          {[
-                            { q: "Как проходят эфиры?", a: "В лайв-формате с чатом, записи сохраняются." },
-                            { q: "Будут ли записи?", a: "Да, в библиотеке доступны в любое время." },
-                            { q: "Нужно ли оборудование?", a: "Нет, достаточно телефона или ноутбука." },
-                            { q: "Как отменить подписку?", a: "В 1 клик в профиле, без вопросов." },
-                            { q: "Есть ли бесплатный доступ?", a: "Первый эфир бесплатен, без карты." },
-                            { q: "Какой уровень подготовки нужен?", a: "Подходит для любого уровня, темп — ваш." },
-                          ].map((f, i) => (
-                            <details key={i} className="rounded-xl bg-white/70 ring-1 ring-black/5 p-4">
-                              <summary className="cursor-pointer font-medium text-gray-800">{f.q}</summary>
-                              <p className="mt-2 text-gray-600">{f.a}</p>
-                            </details>
-                          ))}
-                        </div>
-                    </div>
-                    {/* Final CTA + Footer */}
-                    <div className="relative z-20 text-center px-6 max-w-2xl mx-auto reveal rounded-3xl bg-white/50 backdrop-blur-xl ring-1 ring-black/5 py-8">
-                        <h2 className="text-3xl md:text-5xl font-semibold text-gray-800">Будьте в балансе каждый день</h2>
-                        <p className="mt-4 text-gray-600 text-base md:text-lg">Присоединяйтесь к сообществу, где ценят осознанность, движение и поддержку.</p>
-                        <div className="mt-8 flex items-center justify-center gap-4">
-                            <a href="http://localhost:3001/register" className="rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Присоединиться</a>
-                            <a href="http://localhost:3001/login" className="rounded-full bg-white/80 px-6 py-3 text-sm md:text-base text-gray-800 shadow hover:bg-white transition-colors">У меня есть аккаунт</a>
-                        </div>
-                        <p className="mt-3 text-xs text-gray-500">Первый эфир — бесплатно. Без карты.</p>
-                    </div>
-                    <footer className="relative z-20 border-t border-gray-200/70 bg-white/70 backdrop-blur text-gray-700 text-sm rounded-2xl">
-                      <div className="mx-auto max-w-6xl px-6 py-4 md:py-6 flex flex-col items-center gap-3 text-center">
-                        <div className="flex items-center gap-3 whitespace-nowrap">
-                          <img src="/logo-sunset.svg" alt="GARmonia" className="h-5 w-5" />
-                          <span className="font-medium">GARmonia</span>
-                          <span>© {new Date().getFullYear()} GARmonia. Все права защищены.</span>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <a href="#about" className="hover:text-gray-900 transition-colors">О нас</a>
-                          <a href="#offerings" className="hover:text-gray-900 transition-colors">Возможности</a>
-                          <a href="#join" className="hover:text-gray-900 transition-colors">Присоединиться</a>
-                        </div>
-                      </div>
-                    </footer>
-                </div>
-            </section>
+            {/* Join (Bento) */}
+            <Section id="join" title="Присоединиться" subtitle="Один план — полный доступ к эфирам и библиотеке. Отмена в 1 клик.">
+              <BentoGrid>
+                <BentoCard title="Подписка без лишнего" subtitle="Первый эфир — бесплатно" colSpan={{ base: 4, md: 8, lg: 6, xl: 8 }}>
+                  <div className="grid gap-3 text-gray-700">
+                    {[
+                      'Прямые эфиры с экспертами',
+                      'Библиотека записей',
+                      'Личные рекомендации',
+                      'Доступ к закрытому сообществу',
+                    ].map((t, i) => (
+                      <div key={i} className="flex items-center gap-3"><span className="h-6 w-6 rounded-full bg-teal-100 text-teal-600 inline-flex items-center justify-center">✓</span> {t}</div>
+                    ))}
+                  </div>
+                  <div className="mt-6 flex items-center gap-3">
+                    <a href="http://localhost:3001/register" className="inline-flex rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow">Оформить подписку</a>
+                    <a href="#offerings" className="inline-flex rounded-full bg-white/80 px-6 py-3 text-sm md:text-base text-gray-800 shadow">Смотреть ближайший эфир</a>
+                  </div>
+                  <p className="mt-3 text-xs text-gray-500">7 дней возврат, если не зайдёт. Без карты на первый эфир.</p>
+                </BentoCard>
+
+                <BentoCard media={(
+                  <Image src="/photo2.png" alt="Команда экспертов" fill loading="lazy" sizes="(min-width:1280px) 33vw, (min-width:768px) 50vw, 100vw" className="object-cover" />
+                )} colSpan={{ base: 4, md: 8, lg: 6, xl: 4 }} />
+
+                <BentoCard title="FAQ" colSpan={{ base: 4, md: 8, lg: 6, xl: 8 }}>
+                  <div className="grid md:grid-cols-2 gap-4 text-gray-700 text-sm" id="faq">
+                    {[
+                      { q: 'Как проходят эфиры?', a: 'В лайв-формате с чатом, записи сохраняются.' },
+                      { q: 'Будут ли записи?', a: 'Да, в библиотеке доступны в любое время.' },
+                      { q: 'Нужно ли оборудование?', a: 'Нет, достаточно телефона или ноутбука.' },
+                      { q: 'Как отменить подписку?', a: 'В 1 клик в профиле, без вопросов.' },
+                      { q: 'Есть ли бесплатный доступ?', a: 'Первый эфир бесплатен, без карты.' },
+                      { q: 'Какой уровень подготовки нужен?', a: 'Подходит для любого уровня, темп — ваш.' },
+                    ].map((f,i)=> (
+                      <details key={i} className="rounded-xl bg-white/70 ring-1 ring-black/5 p-4">
+                        <summary className="cursor-pointer font-medium text-gray-800">{f.q}</summary>
+                        <p className="mt-2 text-gray-600">{f.a}</p>
+                      </details>
+                    ))}
+                  </div>
+                </BentoCard>
+
+                <BentoCard title="Будьте в балансе каждый день" subtitle="Присоединяйтесь к сообществу, где ценят осознанность, движение и поддержку." colSpan={{ base: 4, md: 8, lg: 12, xl: 12 }}>
+                  <div className="mt-4 flex items-center justify-center gap-4">
+                    <a href="http://localhost:3001/register" className="rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow">Присоединиться</a>
+                    <a href="http://localhost:3001/login" className="rounded-full bg-white/80 px-6 py-3 text-sm md:text-base text-gray-800 shadow">У меня есть аккаунт</a>
+                  </div>
+                  <p className="mt-3 text-xs text-gray-500 text-center">Первый эфир — бесплатно. Без карты.</p>
+                </BentoCard>
+              </BentoGrid>
+            </Section>
 
             {/* Animations CSS */}
             <style jsx global>{`
