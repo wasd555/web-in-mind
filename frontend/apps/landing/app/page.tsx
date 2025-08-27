@@ -5,7 +5,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import ScrollEffects from "../src/components/ScrollEffects";
 import Section from "../src/components/Section";
 import BentoGrid from "../src/components/BentoGrid";
-import { BentoCard } from "../src/components/BentoCard";
+import { BentoCard, GlobalSpotlight, BentoCardStyles } from "../src/components/BentoCard";
+import LightRays from "../src/blocks/Backgrounds/LightRays/LightRays";
 
 function useRevealOnScroll(className: string = "reveal") {
     useEffect(() => {
@@ -129,9 +130,12 @@ export default function Home() {
         return () => clearInterval(id);
     }, []);
 
+    const bentoRef = useRef<HTMLDivElement | null>(null);
+
     return (
         <div className="w-full relative">
             <ScrollEffects />
+            <BentoCardStyles />
             {showSticky && (
                 <div className="fixed top-[100px] left-1/2 -translate-x-1/2 z-40">
                     <div className="glass rounded-full px-3 py-2 shadow flex items-center gap-2 text-xs md:text-sm">
@@ -235,9 +239,30 @@ export default function Home() {
             </section>
 
             {/* Benefits (Bento) */}
-            <Section id="benefits" title="ПОЧЕМУ GARMONIA" subtitle="Мы объединяем практики психологии, медицины и движения. Эфиры, курсы и видео — всё в одном месте, чтобы поддержать ваш баланс.">
+            <Section backgroundColorClassName="bg-gray-400" id="benefits" title="ПОЧЕМУ GARMONIA" subtitle="Мы объединяем практики психологии, медицины и движения. Эфиры, курсы и видео — всё в одном месте, чтобы поддержать ваш баланс.">
+              <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0}}>
+                <LightRays
+                      raysOrigin="top-center"
+                      raysColor="rgb(0, 60, 241)"
+                      raysSpeed={1.5}
+                      lightSpread={0.8}
+                      rayLength={1.2}
+                      followMouse={true}
+                      mouseInfluence={0.1}
+                      noiseAmount={0.1}
+                      distortion={0.05}
+                      className="custom-rays"
+                    />
+              </div>
+              <GlobalSpotlight containerRef={bentoRef as any} spotlightRadius={300} glowColor="132, 0, 255" />
+              <div ref={bentoRef}>
               <BentoGrid cols={{ base: 1, sm: 1, md: 2, lg: 2, xl: 4}}>
                 <BentoCard
+                enableBorderGlow
+                enableParticles
+                particleCount={16}
+                glowColor="132, 0, 255"
+                glowRadius={300}
                   fullRow
                   title="Живые эфиры и практики"
                   subtitle="Присоединяйтесь к трансляциям с экспертами и участвуйте в интерактивных сессиях."
@@ -254,6 +279,11 @@ export default function Home() {
                 </BentoCard>
 
                 <BentoCard
+                  enableBorderGlow
+                  enableParticles
+                  particleCount={16}
+                  glowColor="132, 0, 255"
+                  glowRadius={300}
                   variant="media"
                   backgroundImageSrc="/photo1.png"
                 />
@@ -271,13 +301,20 @@ export default function Home() {
                   desc: 'Короткие практики на каждый день.',
                   icon: '/icon-meditation.svg',
                 }].map((c, i) => (
-                  <BentoCard backgroundColorClassName="bg-gray-200" key={i} title={c.title} subtitle={c.desc} variant="text" colSpan={{ base: 4, md: 4, lg: 4, xl: 4 }} clampLines={3}>
+                  <BentoCard
+                  enableBorderGlow
+                  enableParticles
+                  particleCount={16}
+                  glowColor="132, 0, 255"
+                  glowRadius={300} 
+                    backgroundColorClassName="bg-gray-200" key={i} title={c.title} subtitle={c.desc} variant="text" colSpan={{ base: 4, md: 4, lg: 4, xl: 4 }} clampLines={3}>
                     <div className="h-12 w-12 rounded-2xl bg-white/60 ring-1 ring-black/5 flex items-center justify-center">
                       <Image src={c.icon} alt="" width={28} height={28} />
                     </div>
                   </BentoCard>
                 ))}
               </BentoGrid>
+              </div>
             </Section>
 
             {/* About (Bento) */}
@@ -343,12 +380,26 @@ export default function Home() {
                 id="offerings" title="Возможности" subtitle="Эфиры, курсы, короткие практики и индивидуальные сессии — выбирайте свой ритм.">
               <BentoGrid cols={{ base: 1, sm: 1, md: 2, xl: 4}}>
                 {["Прямые эфиры","Курсы","Практики 5–10 мин","Инд. сессии"].map((t, i) => (
-                  <BentoCard key={t} title={t} subtitle={i===0?"Живое присутствие и поддержка.":i===1?"Глубокие темы по шагам.":i===2?"Мягкая регулярность.":i===3?"Лично и конфиденциально.":""} variant="text" colSpan={{ base: 4, md: 2, lg: 4 }} clampLines={3}>
+                  <BentoCard 
+                  enableBorderGlow
+                  enableTilt
+                  enableMagnetism
+                  clickEffect
+                  glowColor="132, 0, 255"
+                  glowRadius={300}
+                  key={t} title={t} subtitle={i===0?"Живое присутствие и поддержка.":i===1?"Глубокие темы по шагам.":i===2?"Мягкая регулярность.":i===3?"Лично и конфиденциально.":""} variant="text" colSpan={{ base: 4, md: 2, lg: 4 }} clampLines={3}>
                     <button onMouseEnter={() => playChime(i)} className="rounded-xl bg-white/70 ring-1 ring-black/5 px-3 py-2 text-sm whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Попробовать</button>
                   </BentoCard>
                 ))}
 
-                <BentoCard fullRow title="Маршруты к балансу" subtitle="Готовые подборки: «Спокойный сон», «Антитревога», «Лёгкое утро»." variant="text" colSpan={{ base: 1}} clampLines={3}>
+                <BentoCard fullRow 
+                  enableBorderGlow
+                  enableTilt
+                  enableMagnetism
+                  clickEffect
+                  glowColor="132, 0, 255"
+                  glowRadius={300}
+                title="Маршруты к балансу" subtitle="Готовые подборки: «Спокойный сон», «Антитревога», «Лёгкое утро»." variant="text" colSpan={{ base: 1}} clampLines={3}>
                   <div className="grid md:grid-cols-3 gap-4">
                     {[{title: "Спокойный сон за 7 дней", chip: "вечер"}, {title: "Антитревога", chip: "день"}, {title: "Лёгкое утро", chip: "утро"}].map((r, i) => (
                       <div key={i} className="rounded-2xl p-5 bg-white/70 ring-1 ring-black/5">

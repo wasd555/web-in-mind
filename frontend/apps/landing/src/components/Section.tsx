@@ -69,8 +69,8 @@ export default function Section({
   );
 
   return (
-    <section id={id} aria-labelledby={headingId} className="py-12 sm:py-16 lg:py-24">
-      <div className={joinClasses("mx-auto max-w-[130rem] px-4 sm:px-6 lg:px-8", containerClassName)}>
+    <section style={{ position: 'relative'}} id={id} aria-labelledby={headingId} className="py-12 sm:py-16 lg:py-24">
+      <div className={joinClasses("mx-auto  px-4 sm:px-6 lg:px-8", containerClassName)}>
         {usePanel ? (
           <div className={panelClasses}>
             {backgroundImageSrc && (
