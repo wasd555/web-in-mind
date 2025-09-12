@@ -1,0 +1,88 @@
+name: landing-cicd
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'frontend/apps/landing/**'
+      - '.github/workflows/cicd.yml'
+      - 'deploy/**'
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE_NAME: frontend-apps-landing
+  REGISTRY: ghcr.io
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.vars.outputs.image_tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute short sha
+        id: vars
+        run: |
+          echo "sha_short=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          echo "image_tag=main-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.GHCR_USER }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: frontend/apps/landing/Dockerfile
+          push: true
+          provenance: false
+          platforms: linux/amd64
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.image_tag }}
+
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy deploy files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.YC_HOST }}
+          username: ${{ secrets.YC_USER }}
+          key: ${{ secrets.YC_SSH_KEY }}
+          source: |
+            deploy/landing.compose.yml
+            deploy/landing.deploy.sh
+          target: /opt/garmonia
+
+      - name: Run remote deploy script
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.YC_HOST }}
+          username: ${{ secrets.YC_USER }}
+          key: ${{ secrets.YC_SSH_KEY }}
+          script: |
+            set -euo pipefail
+            sudo chmod +x /opt/garmonia/landing.deploy.sh
+            GH_REPOSITORY='${{ github.repository }}' \
+            IMAGE_TAG='${{ needs.build_and_push.outputs.image_tag }}' \
+            GHCR_USER='${{ secrets.GHCR_USER }}' \
+            GHCR_TOKEN='${{ secrets.GHCR_TOKEN }}' \
+            bash /opt/garmonia/landing.deploy.sh
+
+

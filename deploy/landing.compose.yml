@@ -1,0 +1,24 @@
+# Docker Compose стек для микрофронтенда "landing" (Next.js)
+# Базовый реестр образов: ghcr.io/OWNER/REPO  (оставлено в комменте для читаемости)
+
+services:
+  landing:
+    image: "${IMAGE_REPO:-ghcr.io/OWNER/REPO/frontend-apps-landing}:${IMAGE_TAG:-latest}"
+    container_name: landing
+    restart: unless-stopped
+    env_file:
+      - /opt/garmonia/landing.env
+    environment:
+      - NODE_ENV=production
+    # Если нужен прямой проброс порта (без внешнего прокси)
+    # Поменяйте левую часть на нужный порт хоста
+    ports:
+      - "3000:3000"
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
+
+

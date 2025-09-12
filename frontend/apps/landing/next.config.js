@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  // Стендэлон-вывод для контейнеризации
+  output: 'standalone',
+};
 
 export default nextConfig;
