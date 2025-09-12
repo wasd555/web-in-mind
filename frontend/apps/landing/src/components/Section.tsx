@@ -48,7 +48,7 @@ export default function Section({
     ? joinClasses(
         "relative isolate overflow-hidden",
         rounded !== false ? "rounded-3xl" : undefined,
-        // стеклянный фон по умолчанию, если не задан кастомный цвет
+        // default glass
         backgroundColorClassName ?? "bg-white/70 dark:bg-white/5",
         "backdrop-blur-md ring-1 ring-black/5 dark:ring-white/10",
         "p-5 sm:p-6 lg:p-8"
@@ -69,8 +69,8 @@ export default function Section({
   );
 
   return (
-    <section id={id} aria-labelledby={headingId} className="py-12 sm:py-16 lg:py-24">
-      <div className={joinClasses("mx-auto max-w-[130rem] px-4 sm:px-6 lg:px-8", containerClassName)}>
+    <section  id={id} aria-labelledby={headingId} className="py-12 sm:py-16 lg:py-24">
+      <div className={joinClasses("mx-auto max-w-[150rem] px-4 sm:px-6 lg:px-8", containerClassName)}>
         {usePanel ? (
           <div className={panelClasses}>
             {backgroundImageSrc && (

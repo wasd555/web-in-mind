@@ -239,50 +239,89 @@ export default function Home() {
               <BentoGrid cols={{ base: 1, sm: 1, md: 2, lg: 2, xl: 4}}>
                 <BentoCard
                   fullRow
-                  title="Живые эфиры и практики"
-                  subtitle="Присоединяйтесь к трансляциям с экспертами и участвуйте в интерактивных сессиях."
+                  title="Основатель: Муратова Гульмира"
+                  subtitle="Практический психолог - Мира международной сертификации Австрия / Казань"
                   variant="text"
-                  clampLines={4}
-                  backgroundColorClassName="bg-[linear-gradient(to_top_left,#98C2CA_50%,#d8d8d8_50%)]"
+                  backgroundColorClassName="bg-white/85"
+                  clampLines={5}
+                  contentClassName="pt-0"
                 >
-                  <ul className="grid gap-2 text-sm md:text-base py-5 lg:text-[17px] leading-relaxed list-disc pl-5">
-                    <li>Индивидуальные рекомендации</li>
-                    <li>Напоминания о лайвах</li>
-                    <li>Доступ с любого устройства</li>
-                    <li>Поддержка 24/7</li>
-                  </ul>
-                </BentoCard>
-
-                <BentoCard
-                  variant="media"
-                  backgroundImageSrc="/photo1.png"
-                />
-
-                {[{
-                  title: 'Библиотека видео',
-                  desc: 'Смотрите записи вебинаров и курсы в удобном темпе.',
-                  icon: '/icon-video.svg',
-                }, {
-                  title: 'Забота о себе',
-                  desc: 'Медитации, дыхание, психообразование — мягко и регулярно.',
-                  icon: '/icon-heart.svg',
-                }, {
-                  title: 'Медитации',
-                  desc: 'Короткие практики на каждый день.',
-                  icon: '/icon-meditation.svg',
-                }].map((c, i) => (
-                  <BentoCard backgroundColorClassName="bg-gray-200" key={i} title={c.title} subtitle={c.desc} variant="text" colSpan={{ base: 4, md: 4, lg: 4, xl: 4 }} clampLines={3}>
-                    <div className="h-12 w-12 rounded-2xl bg-white/60 ring-1 ring-black/5 flex items-center justify-center">
-                      <Image src={c.icon} alt="" width={28} height={28} />
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                    <div className="md:col-span-3">
+                      <div className="relative w-full aspect-[3/4] overflow-hidden rounded-3xl ring-1 ring-black/5">
+                        <Image src="/mira.jpg" alt="Муратова Гульмира" fill sizes="(min-width:1024px) 20vw, 60vw" className="object-cover" />
+                      </div>
                     </div>
-                  </BentoCard>
-                ))}
+                    <div className="md:col-span-9">
+                      <div className="grid gap-5">
+                        <div className="grid gap-3 text-sm md:text-base lg:text-[17px] leading-relaxed text-gray-700">
+                          <p className="text-gray-900 font-medium">Обо мне</p>
+                          <div className="grid md:grid-cols-3 gap-3">
+                            <div className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5">
+                              <div className="flex items-center gap-2 text-teal-700"><span className="h-6 w-6 rounded-lg bg-teal-100 inline-flex items-center justify-center">✓</span><span className="font-medium">Сильная база</span></div>
+                              <p className="mt-1 text-gray-700">Квалификация, знание и опыт работы в области образования, психотерапии, медицины и спорта.</p>
+                            </div>
+                            <div className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5">
+                              <div className="flex items-center gap-2 text-teal-700"><span className="h-6 w-6 rounded-lg bg-teal-100 inline-flex items-center justify-center">★</span><span className="font-medium">Европейская сертификация</span></div>
+                              <p className="mt-1 text-gray-700">Европейская психотерапевтическая лига, позитивная терапия (Австрия/Казань).</p>
+                            </div>
+                            <div className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5">
+                              <div className="flex items-center gap-2 text-teal-700"><span className="h-6 w-6 rounded-lg bg-teal-100 inline-flex items-center justify-center">🏅</span><span className="font-medium">Работа с результатом</span></div>
+                              <p className="mt-1 text-gray-700">Гуманистический психодинамический метод. Постнеклассический подход.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <p className="text-gray-900 font-medium">Образование и квалификации</p>
+                          <ul className="mt-2 grid gap-2 text-sm md:text-base leading-relaxed list-disc pl-5">
+                            <li>Педагогический институт, специальность — дефектолог (Караганда)</li>
+                            <li>ИР ОРТ: Институт развития и образования, практический психолог (Казань)</li>
+                            <li>Международный сертификат Европейской психотерапевтической лиги, позитивная терапия (Австрия/Казань)</li>
+                            <li>Аспирантура при КФУ: научная работа по психологии одарённых детей и молодёжи — «Психологические особенности показателей личностных характеристик в структуре диссинхронии психического развития одарённых» (Казань)</li>
+                            <li>АНО «НИИДПО»: науч.-исслед. институт доп. и проф. обучения - Подготовка спортсменов: удостоверение квалификации — тренер(Москва)</li>
+                            <li>АНО «НИИДПО»: спортивная диетология и нутрициология, специальность — нутрициолог (Москва)</li>
+                          </ul>
+                        </div>
+
+                        <div className="grid md:grid-cols-3 gap-3 text-sm">
+                          <div className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5 flex items-center gap-3">
+                            <span className="h-8 w-8 rounded-xl bg-emerald-100 text-emerald-700 inline-flex items-center justify-center">💬</span>
+                            <div>
+                              <p className="font-medium text-gray-900">Ясный язык</p>
+                              <p className="text-gray-700">Сложное делает понятным и применимым в быту.</p>
+                            </div>
+                          </div>
+                          <div className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5 flex items-center gap-3">
+                            <span className="h-8 w-8 rounded-xl bg-sky-100 text-sky-700 inline-flex items-center justify-center">🧭</span>
+                            <div>
+                              <p className="font-medium text-gray-900">Этика и бережность</p>
+                              <p className="text-gray-700">Без осуждения, с опорой на доказательные методы.</p>
+                            </div>
+                          </div>
+                          <div className="rounded-2xl p-4 bg-white/70 ring-1 ring-black/5 flex items-center gap-3">
+                            <span className="h-8 w-8 rounded-xl bg-amber-100 text-amber-700 inline-flex items-center justify-center">⏱</span>
+                            <div>
+                              <p className="font-medium text-gray-900">Практика коротких шагов</p>
+                              <p className="text-gray-700">Результат через регулярность — без перегруза.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-3">
+                          <a href="#offerings" className="rounded-full bg-teal-600 text-white px-5 py-3 text-sm md:text-base shadow hover:bg-teal-500 transition-colors">Смотреть ближайший эфир</a>
+                          <a href="http://localhost:3001/register" className="rounded-full bg-white/80 px-5 py-3 text-sm md:text-base text-gray-800 shadow hover:bg-white transition-colors">Присоединиться</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </BentoCard>
               </BentoGrid>
             </Section>
 
             {/* About (Bento) */}
             <Section id="about" title="О GARMONIA" subtitle="Научный подход и человеческое тепло. Эфиры, курсы, библиотека и сообщество — мягко возвращают к балансу.">
-              <BentoGrid>
+              <BentoGrid cols={{ base: 1, sm: 1, md: 2, xl: 4}}>
                 <BentoCard
                   title="О платформе"
                   backgroundColorClassName="bg-gray-50"
@@ -293,7 +332,7 @@ export default function Home() {
                 >
                   <div className="grid grid-cols-2 gap-2 text-sm md:text-base lg:text-[17px] leading-relaxed">
                     <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-sky-500" /> Научная база</div>
-                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-500" /> Бережная модерация</div>
+                    <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-https://claude.ai/_next/image?url=%2Fimages%2Fhome-page-assets%2Fiphone_ui.png&w=640&q=75500" /> Бережная модерация</div>
                     <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-amber-500" /> Прозрачность</div>
                     <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-teal-500" /> Приватность</div>
                   </div>

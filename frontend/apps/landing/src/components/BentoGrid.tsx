@@ -35,14 +35,14 @@ function buildColsClasses(cols?: GridCols): string {
   ].filter(Boolean).join(" ");
 }
 
-export default function BentoGrid({ children, cols }: { children: React.ReactNode; cols?: GridCols }) {
-  // Сохраняем текущее поведение по умолчанию (mobile:4, md:2, xl:4)
+export default function BentoGrid({ children, cols }: { children: React.ReactNode; cols?: GridCols;}) {
   const defaultClasses = "grid-cols-4 md:grid-cols-2 xl:grid-cols-4";
-  const custom = buildColsClasses(cols);
+  const defaultTextColor = "text-black";
+  const customCols = buildColsClasses(cols);
 
   return (
     <div className="mx-auto max-w-[120rem] px-4 sm:px-6 lg:px-8">
-      <div className={`grid auto-rows-[1fr] gap-4 sm:gap-6 lg:gap-8 ${custom || defaultClasses}`}>
+      <div className={`grid auto-rows-[1fr] gap-4 sm:gap-6 lg:gap-8 ${customCols || defaultClasses}`}>
         {children}
       </div>
     </div>

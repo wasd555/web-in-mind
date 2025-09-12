@@ -55,18 +55,16 @@ export default function MobileNav({ links, logoUrl }: Props) {
                 aria-modal="true"
                 className={`mobile-drawer fixed right-0 top-0 h-dvh w-[86%] max-w-sm z-[80] transition-transform duration-300 ease-out ${open ? "translate-x-0" : "translate-x-full"} ${open ? "shadow-2xl" : "shadow-none"} backdrop-blur-xl ring-1 ring-black/5 flex flex-col pb-[max(env(safe-area-inset-bottom),16px)]`}
             >
-                <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200/80">
+                <div className="flex items-center justify-between px-5 py-5 border-b border-gray-200/80">
                     <div className="flex items-center gap-2">
-                        {logoUrl ? (
-                            <img src={logoUrl} alt="GARmonia" width={24} height={24} className="h-6 w-6" />
-                        ) : null}
-                        <span className="font-thin tracking-[0.2em] text-gray-800">GARMONIA</span>
+
+                        <span className="font-thin tracking-[0.2em] text-gray-200">GARMONIA</span>
                     </div>
                     <button aria-label="Закрыть" className="h-9 w-9 inline-flex items-center justify-center rounded-md hover:bg-white/60" onClick={() => setOpen(false)}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12M18 6l-12 12"/></svg>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12M18 6l-12 12"/></svg>
                     </button>
                 </div>
-                <nav className="flex-1 flex flex-col px-5 py-4 gap-2 overflow-y-auto text-[15px]">
+                <nav className="flex-1 flex flex-col px-5 py-4 gap-2 overflow-y-auto text-[15px] bg-white/90">
                     {links.map((l) => (
                         <a key={l.href} href={l.href} className="mobile-link px-3 py-3 rounded-lg text-gray-800 transition-colors ring-1 ring-transparent" onClick={() => setOpen(false)}>
                             {l.label}
@@ -79,7 +77,7 @@ export default function MobileNav({ links, logoUrl }: Props) {
                         <ThemeToggle inDrawer className="w-full" />
                     </div>
                 </nav>
-                <div className="px-5 py-4 border-t border-gray-200/80 text-xs text-gray-500 flex items-center justify-between">
+                <div className="px-5 py-4 border-t border-gray-200/80 text-xs text-gray-500 flex items-center justify-between bg-white/90">
                     <span>© {new Date().getFullYear()} GARmonia</span>
                     {logoUrl ? <img src={logoUrl} alt="GARmonia" width={20} height={20} className="opacity-80" /> : null}
                 </div>
