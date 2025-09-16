@@ -79,6 +79,7 @@ jobs:
           key: ${{ secrets.YC_SSH_KEY }}
           source: "deploy/landing.compose.yml,deploy/landing.deploy.sh"
           target: "garmonia_tmp"
+          strip_components: 1
           debug: true
 
       - name: Move to /opt and run deploy
@@ -87,17 +88,19 @@ jobs:
           GH_REPOSITORY: ${{ github.repository }}
           IMAGE_TAG: ${{ needs.build_and_push.outputs.image_tag }}
           GHCR_USER: ${{ secrets.GHCR_USER || github.actor }}
-          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
         with:
           host: ${{ secrets.YC_HOST }}
           username: ${{ secrets.YC_USER }}
           key: ${{ secrets.YC_SSH_KEY }}
+          envs: GH_REPOSITORY,IMAGE_TAG,GHCR_USER,GHCR_TOKEN
           script_stop: true
           script: |
             set -euxo pipefail
+            ls -R ~/garmonia_tmp
             sudo mkdir -p /opt/garmonia
-            sudo mv ~/garmonia_tmp/deploy/landing.compose.yml /opt/garmonia/landing.compose.yml
-            sudo mv ~/garmonia_tmp/deploy/landing.deploy.sh  /opt/garmonia/landing.deploy.sh
+            sudo mv ~/garmonia_tmp/landing.compose.yml /opt/garmonia/landing.compose.yml
+            sudo mv ~/garmonia_tmp/landing.deploy.sh  /opt/garmonia/landing.deploy.sh
             sudo chmod +x /opt/garmonia/landing.deploy.sh
             sudo --preserve-env=GH_REPOSITORY,IMAGE_TAG,GHCR_USER,GHCR_TOKEN \
               bash -x /opt/garmonia/landing.deploy.sh

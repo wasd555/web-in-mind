@@ -3,7 +3,7 @@
 
 services:
   landing:
-    image: "${IMAGE_REPO:-ghcr.io/OWNER/REPO/frontend-apps-landing}:${IMAGE_TAG:-latest}"
+    image: ${IMAGE_REPO}:${IMAGE_TAG}
     container_name: landing
     restart: unless-stopped
     env_file:
