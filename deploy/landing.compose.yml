@@ -12,8 +12,11 @@ services:
       - NODE_ENV=production
     # Если нужен прямой проброс порта (без внешнего прокси)
     # Поменяйте левую часть на нужный порт хоста
-    ports:
-      - "3000:3000"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.landing.entrypoints=web
+      - traefik.http.routers.landing.rule=PathPrefix(`/`)
+      - traefik.http.services.landing.loadbalancer.server.port=3000
     networks:
       - web
 
