@@ -22,7 +22,7 @@ function buildColsClasses(cols?: GridCols): string {
   const md = clampCols(cols?.md);
   const lg = clampCols(cols?.lg);
   const xl = clampCols(cols?.xl);
-  // @ts-expect-error - support 2xl breakpoint key
+  
   const x2 = clampCols(cols?.["2xl"] as number | undefined);
 
   return [
