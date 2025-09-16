@@ -53,16 +53,16 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# For Next.js standalone output
-# .next/standalone contains node_modules and server code
+# Копируем standalone-вывод целиком в /app,
+# а static и public — в папку приложения внутри монорепы
 COPY --from=builder /app/frontend/apps/landing/.next/standalone ./
-COPY --from=builder /app/frontend/apps/landing/public ./public
-COPY --from=builder /app/frontend/apps/landing/.next/static ./.next/static
+COPY --from=builder /app/frontend/apps/landing/.next/static ./apps/landing/.next/static
+COPY --from=builder /app/frontend/apps/landing/public ./apps/landing/public
 
 # Expose port used by Next start
 EXPOSE 3000
 
 # Start the server
-CMD ["node", "server.js"]
+CMD ["node", "apps/landing/server.js"]
 
 
