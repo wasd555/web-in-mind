@@ -6,6 +6,7 @@ on:
     paths:
       - 'frontend/apps/landing/**'
       - '.github/workflows/cicd.yml'
+      - 'frontend/package-lock.json'
       - 'deploy/**'
 
 permissions:
