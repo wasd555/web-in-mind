@@ -56,13 +56,13 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # For Next.js standalone output
 # .next/standalone contains node_modules and server code
 COPY --from=builder /app/frontend/apps/landing/.next/standalone ./
-COPY --from=builder /app/frontend/apps/landing/.next/static ./frontend/apps/landing/.next/static
-COPY --from=builder /app/frontend/apps/landing/public ./frontend/apps/landing/public
+COPY --from=builder /app/frontend/apps/landing/public ./public
+COPY --from=builder /app/frontend/apps/landing/.next/static ./.next/static
 
 # Expose port used by Next start
 EXPOSE 3000
 
 # Start the server
-CMD ["node", "frontend/apps/landing/server.js"]
+CMD ["node", "server.js"]
 
 
