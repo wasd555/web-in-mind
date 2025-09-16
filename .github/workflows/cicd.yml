@@ -60,30 +60,44 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Copy deploy files to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.YC_HOST }}
-          username: ${{ secrets.YC_USER }}
-          key: ${{ secrets.YC_SSH_KEY }}
-          source: |
-            deploy/landing.compose.yml
-            deploy/landing.deploy.sh
-          target: /opt/garmonia
-
-      - name: Run remote deploy script
+      - name: Prepare tmp on server
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.YC_HOST }}
           username: ${{ secrets.YC_USER }}
           key: ${{ secrets.YC_SSH_KEY }}
+          script_stop: true
           script: |
             set -euo pipefail
+            rm -rf ~/garmonia_tmp && mkdir -p ~/garmonia_tmp
+
+      - name: Copy compose & deploy script
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.YC_HOST }}
+          username: ${{ secrets.YC_USER }}
+          key: ${{ secrets.YC_SSH_KEY }}
+          source: "deploy/landing.compose.yml,deploy/landing.deploy.sh"
+          target: "garmonia_tmp"
+          debug: true
+
+      - name: Move to /opt and run deploy
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          GH_REPOSITORY: ${{ github.repository }}
+          IMAGE_TAG: ${{ needs.build_and_push.outputs.image_tag }}
+          GHCR_USER: ${{ secrets.GHCR_USER || github.actor }}
+          GHCR_TOKEN: ${{ secrets.GHCR_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          host: ${{ secrets.YC_HOST }}
+          username: ${{ secrets.YC_USER }}
+          key: ${{ secrets.YC_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euxo pipefail
+            sudo mkdir -p /opt/garmonia
+            sudo mv ~/garmonia_tmp/landing.compose.yml /opt/garmonia/landing.compose.yml
+            sudo mv ~/garmonia_tmp/landing.deploy.sh  /opt/garmonia/landing.deploy.sh
             sudo chmod +x /opt/garmonia/landing.deploy.sh
-            GH_REPOSITORY='${{ github.repository }}' \
-            IMAGE_TAG='${{ needs.build_and_push.outputs.image_tag }}' \
-            GHCR_USER='${{ secrets.GHCR_USER }}' \
-            GHCR_TOKEN='${{ secrets.GHCR_TOKEN }}' \
-            bash /opt/garmonia/landing.deploy.sh
-
-
+            sudo --preserve-env=GH_REPOSITORY,IMAGE_TAG,GHCR_USER,GHCR_TOKEN \
+              bash -x /opt/garmonia/landing.deploy.sh
