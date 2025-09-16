@@ -96,8 +96,8 @@ jobs:
           script: |
             set -euxo pipefail
             sudo mkdir -p /opt/garmonia
-            sudo mv ~/garmonia_tmp/landing.compose.yml /opt/garmonia/landing.compose.yml
-            sudo mv ~/garmonia_tmp/landing.deploy.sh  /opt/garmonia/landing.deploy.sh
+            sudo mv ~/garmonia_tmp/deploy/landing.compose.yml /opt/garmonia/landing.compose.yml
+            sudo mv ~/garmonia_tmp/deploy/landing.deploy.sh  /opt/garmonia/landing.deploy.sh
             sudo chmod +x /opt/garmonia/landing.deploy.sh
             sudo --preserve-env=GH_REPOSITORY,IMAGE_TAG,GHCR_USER,GHCR_TOKEN \
               bash -x /opt/garmonia/landing.deploy.sh
