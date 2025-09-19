@@ -13,7 +13,15 @@ function Blob({ className }: { className?: string }) {
   );
 }
 
+import { useCookieConsent } from "../lib/consent/hook";
+
 export default function Footer() {
+  let openSettings: () => void = () => {};
+  try {
+    openSettings = useCookieConsent().openSettings;
+  } catch {
+    // ignore if no provider (should not happen in layout)
+  }
   return (
     <footer className="relative overflow-hidden rounded-t-3xl border-t border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-md ring-1 ring-black/5 dark:ring-white/10">
       <Blob className="-top-20 -left-10 h-56 w-56 bg-gradient-to-br from-sky-200 to-emerald-200" />
@@ -112,6 +120,7 @@ export default function Footer() {
           <div className="flex items-center gap-4">
             <a href="#" className="hover:text-gray-900">RU</a>
             <a href="#" className="hover:text-gray-900">EN</a>
+            <button onClick={openSettings} className="rounded-xl bg-white/70 ring-1 ring-black/5 px-3 py-2 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 whitespace-nowrap">Настройки cookies</button>
           </div>
         </div>
       </div>

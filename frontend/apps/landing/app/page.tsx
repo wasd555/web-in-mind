@@ -321,13 +321,13 @@ export default function Home() {
 
             {/* About (Bento) */}
             <Section id="about" title="О GARMONIA" subtitle="Научный подход и человеческое тепло. Эфиры, курсы, библиотека и сообщество — мягко возвращают к балансу.">
-              <BentoGrid cols={{ base: 1, sm: 1, md: 2, xl: 4}}>
+              <BentoGrid cols={{ base: 1, sm: 1, md: 2, lg: 2, xl: 4 }}>
                 <BentoCard
                   title="О платформе"
                   backgroundColorClassName="bg-gray-50"
                   subtitle="Прозрачность, приватность и бережная модерация"
                   variant="text"
-                  colSpan={{ base: 4, md: 4, lg: 6, xl: 8 }}
+                  colSpan={{ base: 1, md: 2, lg: 2, xl: 4 }}
                   clampLines={4}
                 >
                   <div className="grid grid-cols-2 gap-2 text-sm md:text-base lg:text-[17px] leading-relaxed">
@@ -344,14 +344,14 @@ export default function Home() {
                   backgroundImageSizes="(min-width:768px) 40vw, 100vw"
                   backgroundImageClassName="object-cover"
                   variant="media"
-                  colSpan={{ base: 4, md: 4, lg: 3, xl: 4 }}
+                  colSpan={{ base: 1, md: 1, lg: 1, xl: 2 }}
                 />
 
                 <BentoCard
                   title="60 секунд к личному маршруту"
                   subtitle="Короткая диагностика подскажет, с чего начать — дыхание, сон, тревога, энергия."
                   variant="text"
-                  colSpan={{ base: 4, md: 4, lg: 3, xl: 6 }}
+                  colSpan={{ base: 1, md: 1, lg: 1, xl: 2 }}
                   href="#offerings"
                   cta="Пройти диагностику"
                   clampLines={4}
@@ -371,14 +371,14 @@ export default function Home() {
                     <Image src="/live-mock-upload.png" alt="Диагностика" fill loading="lazy" sizes="(min-width:1280px) 33vw, (min-width:768px) 50vw, 100vw" className="object-cover opacity-30" />
                   )}
                   variant="media"
-                  colSpan={{ base: 4, md: 4, lg: 4, xl: 6 }}
+                  colSpan={{ base: 1, md: 2, lg: 2, xl: 4 }}
                 />
               </BentoGrid>
             </Section>
 
             {/* Offerings (Bento) */}
             <Section 
-                backgroundImageSrc="/bg-hero5.png"
+                backgroundImageSrc="/bg-hero3.png"
                 id="offerings" title="Возможности" subtitle="Эфиры, курсы, короткие практики и индивидуальные сессии — выбирайте свой ритм.">
               <BentoGrid cols={{ base: 1, sm: 1, md: 2, xl: 4}}>
                 {["Прямые эфиры","Курсы","Практики 5–10 мин","Инд. сессии"].map((t, i) => (
@@ -493,7 +493,7 @@ export default function Home() {
 
             {/* Join (Bento) */}
             <Section id="join" title="Присоединиться" subtitle="Один план — полный доступ к эфирам и библиотеке. Отмена в 1 клик.">
-              <BentoGrid>
+              <BentoGrid cols={{ base: 1, md: 2, lg: 2, xl: 4}}>
                 <BentoCard title="Подписка без лишнего" subtitle="Первый эфир — бесплатно" colSpan={{ base: 4, md: 8, lg: 6, xl: 8 }}>
                   <div className="grid gap-3 text-gray-700">
                     {[
@@ -534,7 +534,7 @@ export default function Home() {
                   </div>
                 </BentoCard>
 
-                <BentoCard title="Будьте в балансе каждый день" subtitle="Присоединяйтесь к сообществу, где ценят осознанность, движение и поддержку." colSpan={{ base: 4, md: 8, lg: 12, xl: 12 }}>
+                <BentoCard title="Будьте в балансе каждый день" subtitle="Присоединяйтесь к сообществу, где ценят осознанность, движение и поддержку." colSpan={{ base: 1}}>
                   <div className="mt-4 flex items-center justify-center gap-4">
                     <a href="http://localhost:3001/register" className="rounded-full bg-teal-600 text-white px-6 py-3 text-sm md:text-base shadow">Присоединиться</a>
                     <a href="http://localhost:3001/login" className="rounded-full bg-white/80 px-6 py-3 text-sm md:text-base text-gray-800 shadow">У меня есть аккаунт</a>
