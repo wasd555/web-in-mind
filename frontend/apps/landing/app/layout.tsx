@@ -4,6 +4,8 @@ import { Montserrat, Manrope } from "next/font/google";
 import GlobalThree from "../src/components/HeroThree";
 import "./globals.css";
 import ThemeToggle from "../src/components/ThemeToggle";
+import CookieConsent from "../src/components/CookieConsent";
+import { ConsentProvider } from "../src/lib/consent/hook";
 import MobileNav from "../src/components/MobileNav";
 import HeaderBehavior from "../src/components/HeaderBehavior";
 import Footer from "../src/components/Footer";
@@ -38,11 +40,11 @@ export default function RootLayout({
       <body className={`min-h-screen overflow-hidden bg-[#fff] text-gray-900 ${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${manrope.variable}`} style={{ fontFamily: 'var(--font-ui), var(--default-font-family, ui-sans-serif, system-ui, sans-serif)' }}>
         <header className="fixed top-0 left-0 w-full z-50">
           <div className="mx-auto max-w-7xl">
-            <div data-header-card className="neoglass m-0 rounded-b-2xl px-4 py-4 flex items-center gap-3 transition-all duration-300">
+            <div data-header-card className="neoglass m-0 rounded-b-2xl px-4 py-4 flex items-center justify-between gap-3 transition-all duration-300">
               {/* Left: Logo */}
               <div className="flex items-center">
                 <a href="#hero" className="neoglass-logo flex items-center gap-2 px-3 py-2 rounded-2xl">
-                  <span className="text-lg md:text-xl lg:text-xl xl:text-2xl font-thin tracking-[0.2em] md:tracking-[0.24em] bg-clip-text text-transparent" style={{ color: "rgb(98, 98, 98)" }}>GARMONIA</span>
+                  <span className="text-lg md:text-xl lg:text-xl xl:text-2xl font-thin tracking-[0.2em] md:tracking-[0.24em] bg-clip-text text-transparent" style={{ color: "rgb(98, 98, 98)" }}>GARMONIA MIRA</span>
                 </a>
               </div>
               {/* Center: Nav */}
@@ -71,13 +73,16 @@ export default function RootLayout({
           </div>
           <HeaderBehavior />
         </header>
-        <main id="app-scroll" className="h-screen overflow-y-auto transition-[filter] duration-300 will-change-auto relative">
-          <div className="pointer-events-none fixed inset-0 z-10">
-            <GlobalThree />
-          </div>
-          {children}
-          <Footer />
-        </main>
+        <ConsentProvider>
+          <main id="app-scroll" className="h-screen overflow-y-auto transition-[filter] duration-300 will-change-auto relative">
+            <div className="pointer-events-none fixed inset-0 z-10">
+              <GlobalThree />
+            </div>
+            {children}
+            <Footer />
+            <CookieConsent />
+          </main>
+        </ConsentProvider>
       </body>
     </html>
   );
