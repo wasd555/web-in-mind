@@ -43,14 +43,14 @@ export default function RootLayout({
             <div data-header-card className="neoglass m-0 rounded-b-2xl px-4 py-4 flex items-center justify-between gap-3 transition-all duration-300">
               {/* Left: Logo */}
               <div className="flex items-center">
-                <a href="#hero" className="neoglass-logo flex items-center gap-2 px-3 py-2 rounded-2xl">
+                <a href="/" className="neoglass-logo flex items-center gap-2 px-3 py-2 rounded-2xl">
                   <span className="text-lg md:text-xl lg:text-xl xl:text-2xl font-thin tracking-[0.2em] md:tracking-[0.24em] bg-clip-text text-transparent" style={{ color: "rgb(98, 98, 98)" }}>GARMONIA MIRA</span>
                 </a>
               </div>
               {/* Center: Nav */}
               <nav className="hidden lg:flex neoglass-nav w-full flex-1 items-center justify-center gap-2 lg:gap-3 xl:gap-4 text-[16px] lg:text-[16px] text-gray-700 overflow-x-auto whitespace-nowrap px-3 py-2 rounded-2xl overflow-clip" data-nav>
-                <a href="#hero" data-id="hero" className="nav-link px-2 py-1 rounded">Главная</a>
-                <a href="#" className="nav-link px-2 py-1 rounded">Статьи</a>
+                <a href="/" data-id="hero" className="nav-link px-2 py-1 rounded">Главная</a>
+                <a href="/articles" className="nav-link px-2 py-1 rounded">Статьи</a>
                 <a href="/about" className="nav-link px-2 py-1 rounded">О нас</a>
                 <a href="/contacts" className="nav-link px-2 py-1 rounded">Контакты</a>
               </nav>
@@ -64,7 +64,7 @@ export default function RootLayout({
                   Заказать консультацию
                 </a>
                 <div className="lg:hidden">
-                  <MobileNav logoUrl="/logo-sunset.svg" links={[{ href: "#hero", label: "Главная" }, { href: "#", label: "Статьи" }, { href: "/about", label: "О нас" }, { href: "/contacts", label: "Контакты" }]} />
+                  <MobileNav logoUrl="/logo-sunset.svg" links={[{ href: "/", label: "Главная" }, { href: "/articles", label: "Статьи" }, { href: "/about", label: "О нас" }, { href: "/contacts", label: "Контакты" }]} />
                 </div>
               </div>
             </div>
