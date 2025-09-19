@@ -1,10 +1,10 @@
 import BentoGrid from "../../src/components/BentoGrid";
 import { BentoCard } from "../../src/components/BentoCard";
-import { directus, type Article } from "../../src/lib/directus";
+import { DIRECTUS_URL, type Article } from "../../src/lib/directus";
 
 async function fetchArticles(): Promise<Article[]> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_DIRECTUS_URL || 'https://gmira.ru/directus'}/items/articles?filter[status][_eq]=published&sort[]=-published_at&limit=24`, { next: { revalidate: 60 } });
+    const res = await fetch(`${DIRECTUS_URL}/items/articles?filter[status][_eq]=published&sort[]=-published_at&limit=24`, { next: { revalidate: 60 } });
     if (!res.ok) throw new Error(`Failed to load articles: ${res.status}`);
     const data = await res.json();
     return data?.data ?? [];
