@@ -9,7 +9,7 @@ async function fetchArticle(slug: string) {
   return (json?.data?.[0]) ?? null;
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: any): Promise<Metadata> {
   const a = await fetchArticle(params.slug);
   const title = a?.title ? `${a.title} — Статьи` : 'Статья';
   const description = a?.excerpt ?? 'Материал из раздела Статьи';
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ArticlePage({ params }: { params: { slug: string } }) {
+export default async function ArticlePage({ params }: any) {
   const article = await fetchArticle(params.slug);
   if (!article) {
     return (

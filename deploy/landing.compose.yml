@@ -10,16 +10,26 @@ services:
       - /opt/garmonia/landing.env
     environment:
       - NODE_ENV=production
-    # Если нужен прямой проброс порта (без внешнего прокси)
-    # Поменяйте левую часть на нужный порт хоста
     labels:
       - traefik.enable=true
       - traefik.docker.network=web
-      - traefik.http.routers.landing.entrypoints=web
+
+      # правило по домену (две зоны — через OR)
       - traefik.http.routers.landing.rule=(Host(`garmoniamira.pro`) || Host(`www.garmoniamira.pro`)) && PathPrefix(`/`) && !PathPrefix(`/directus`)
+
+      # entrypoints: http + https
+      - traefik.http.routers.landing.entrypoints=web,websecure
+
+      # TLS от Let's Encrypt (резолвер "le")
+      - traefik.http.routers.landing.tls=true
+      - traefik.http.routers.landing.tls.certresolver=le
+
+      # basic-auth + noindex
       - traefik.http.routers.landing.middlewares=landing-auth,landing-noindex
       - traefik.http.middlewares.landing-auth.basicauth.usersfile=/etc/traefik/extras/landing.htpasswd
+      - traefik.http.middlewares.landing-auth.basicauth.realm=Restricted
       - traefik.http.middlewares.landing-noindex.headers.customresponseheaders.X-Robots-Tag=noindex, nofollow, noarchive
+
       - traefik.http.services.landing.loadbalancer.server.port=3000
     networks:
       - web
