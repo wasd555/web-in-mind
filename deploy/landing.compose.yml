@@ -15,20 +15,11 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=web
-
-      # роутинг по домену лендинга
       - traefik.http.routers.landing.entrypoints=web
-      - traefik.http.routers.landing.rule=Host(`garmoniamira.pro`,`www.garmoniamira.pro`) && PathPrefix(`/`) && !PathPrefix(`/directus`)
-
-      # basic-auth (файл внутри контейнера Traefik)
+      - traefik.http.routers.landing.rule=(Host(`garmoniamira.pro`) || Host(`www.garmoniamira.pro`)) && PathPrefix(`/`) && !PathPrefix(`/directus`)
       - traefik.http.routers.landing.middlewares=landing-auth,landing-noindex
       - traefik.http.middlewares.landing-auth.basicauth.usersfile=/etc/traefik/extras/landing.htpasswd
-      - traefik.http.middlewares.landing-auth.basicauth.realm=Restricted
-
-      # закрыть от индексации
       - traefik.http.middlewares.landing-noindex.headers.customresponseheaders.X-Robots-Tag=noindex, nofollow, noarchive
-
-      # порт сервиса
       - traefik.http.services.landing.loadbalancer.server.port=3000
     networks:
       - web
