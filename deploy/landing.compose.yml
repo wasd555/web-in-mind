@@ -15,7 +15,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.landing.entrypoints=web
-      - traefik.http.routers.landing.rule=PathPrefix(`/`)
+      - traefik.http.routers.landing.rule=PathPrefix(`/`) && !PathPrefix(`/directus`)
       - traefik.http.services.landing.loadbalancer.server.port=3000
     networks:
       - web

@@ -50,11 +50,9 @@ export default function RootLayout({
               {/* Center: Nav */}
               <nav className="hidden lg:flex neoglass-nav w-full flex-1 items-center justify-center gap-2 lg:gap-3 xl:gap-4 text-[16px] lg:text-[16px] text-gray-700 overflow-x-auto whitespace-nowrap px-3 py-2 rounded-2xl overflow-clip" data-nav>
                 <a href="#hero" data-id="hero" className="nav-link px-2 py-1 rounded">Главная</a>
-                <a href="#benefits" data-id="benefits" className="nav-link px-2 py-1 rounded">Преимущества</a>
-                <a href="#about" data-id="about" className="nav-link px-2 py-1 rounded">О нас</a>
-                <a href="#offerings" data-id="offerings" className="nav-link px-2 py-1 rounded">Возможности</a>
-                <a href="#trust" data-id="trust" className="nav-link px-2 py-1 rounded">Доверие</a>
-                <a href="#join" data-id="join" className="nav-link px-2 py-1 rounded">Присоединиться</a>
+                <a href="#" className="nav-link px-2 py-1 rounded">Статьи</a>
+                <a href="/about" className="nav-link px-2 py-1 rounded">О нас</a>
+                <a href="/contacts" className="nav-link px-2 py-1 rounded">Контакты</a>
               </nav>
               {/* Right: Theme toggle + CTA / Mobile menu */}
               <div className="flex items-center justify-end gap-2">
@@ -66,7 +64,7 @@ export default function RootLayout({
                   Заказать консультацию
                 </a>
                 <div className="lg:hidden">
-                  <MobileNav logoUrl="/logo-sunset.svg" links={[{ href: "#hero", label: "Главная" }, { href: "#benefits", label: "Преимущества" }, { href: "#about", label: "О нас" }, { href: "#offerings", label: "Возможности" }, { href: "#trust", label: "Доверие" }, { href: "#join", label: "Присоединиться" }]} />
+                  <MobileNav logoUrl="/logo-sunset.svg" links={[{ href: "#hero", label: "Главная" }, { href: "#", label: "Статьи" }, { href: "/about", label: "О нас" }, { href: "/contacts", label: "Контакты" }]} />
                 </div>
               </div>
             </div>
